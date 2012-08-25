@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<!-- XDI FILTER -->
+
+	<bean id="EndpointFilter" class="xdi2.server.EndpointFilter">
+		<property name="endpointServlet" ref="EndpointServlet" />
+	</bean>
+
+	<!-- XDI SERVLET -->
+
+	<bean id="EndpointServlet" class="xdi2.server.EndpointServlet" init-method="init" destroy-method="destroy">
+		<property name="interceptors">
+			<util:list>
+				<bean class="xdi2.server.interceptor.impl.DebugEndpointServletInterceptor" />
+			</util:list>
+		</property>
+	</bean>
+
+	<!-- FACEBOOK CONNECTOR SERVLET -->
+
+	<bean id="ConnectServlet" class="xdi2.connector.facebook.ConnectServlet" init-method="init" destroy-method="destroy">
+		<property name="graph" ref="graph1" />
+		<property name="facebookApi" ref="facebookApi" />
+	</bean>
+
+	<bean name="facebookApi" class="xdi2.connector.facebook.api.FacebookApi" init-method="init" destroy-method="destroy">
+		<property name="appId" value="420250631345354" />
+		<property name="appSecret" value="c2feeda99926ab3c6096beaa8e6eca73" />
+	</bean>
+
+	<!-- MESSAGING TARGET at /facebook -->
+	<!-- MessagingTarget: GraphMessagingTarget backed by a MemoryGraph -->
+
+	<bean id="graphfactory1" class="xdi2.core.impl.memory.MemoryGraphFactory">
+	</bean>
+
+	<bean id="graph1" factory-bean="graphfactory1" factory-method="openGraph" />
+
+	<bean name="facebookContributor" class="xdi2.connector.facebook.contributor.FacebookContributor" init-method="init">
+		<property name="graph" ref="graph1" />
+		<property name="facebookApi" ref="facebookApi" />
+	</bean>
+
+	<bean name="/facebook" class="xdi2.messaging.target.impl.graph.GraphMessagingTarget">
+		<property name="graph" ref="graph1" />
+		<property name="interceptors">
+			<util:list>
+				<bean class="xdi2.messaging.target.interceptor.impl.BootstrapInterceptor">
+					<property name="bootstrapOwner" value="=!1111" />
+					<property name="bootstrapSharedSecret" value="s3cret" />
+					<property name="bootstrapLinkContract" value="true" />
+				</bean>
+				<bean class="xdi2.messaging.target.interceptor.impl.CheckOwnerInterceptor" />
+			</util:list>
+		</property>
+		<property name="contributors">
+			<util:map>
+				<entry key="=!1111$!(+firstname)" value-ref="facebookContributor" />
+				<entry key="=!1111$!(+lastname)" value-ref="facebookContributor" />
+				<entry key="=!1111$!(+gender)" value-ref="facebookContributor" />
+				<entry key="=!1111$!(+email)" value-ref="facebookContributor" />
+			</util:map>
+		</property>
+	</bean>
+
+</beans>
