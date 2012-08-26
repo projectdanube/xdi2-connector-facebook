@@ -126,7 +126,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 				GraphUtil.storeAccessToken(this.getGraph(), accessToken);
 
-				request.setAttribute("feedback", "Access Token successfully received and stored in graph.");
+				request.setAttribute("feedback", "&gt;&gt;&gt; Access Token successfully received and stored in graph.");
 			} catch (Exception ex) {
 
 				request.setAttribute("error", ex.getMessage());
