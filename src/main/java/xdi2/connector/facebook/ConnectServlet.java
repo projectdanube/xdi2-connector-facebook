@@ -112,7 +112,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 			if (errorDescription == null) errorDescription = request.getParameter("error_reason");
 			if (errorDescription == null) errorDescription = request.getParameter("error");
 
-			request.setAttribute("error", errorDescription);
+			request.setAttribute("error", "Error from Facebook API: " + errorDescription);
 		}
 
 		// callback from Facebook?

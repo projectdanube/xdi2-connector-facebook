@@ -29,8 +29,8 @@
 
 	<p class="subheader">Obtain Facebook API Access Token</p>
 
-	<p>This step will initiate an OAuth "code" (also known as "server-side") flow to the Facebook API, in order to obtain an Access Token.</p>
-	<p>The token is then stored in your XDI graph, where it is picked up and used by the Facebook contributor class.</p>
+	<p>This step will initiate an OAuth "code flow" (also known as "server-side flow") to the Facebook API, in order to obtain an access token.</p>
+	<p>The token is then stored in your XDI graph, where it is picked up and used by the XDI2 server to handle requests to your Facebook XDI context.</p>
 
 	<form action="connect" method="get">
 
@@ -39,7 +39,7 @@
 
 	</form>
 
-	<p class="subheader">Send a message to my XDI endoint</p>
+	<p class="subheader">Send a Message to my XDI endoint</p>
 
 	<form action="connect" method="post">
 

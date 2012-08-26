@@ -51,7 +51,7 @@ public class FacebookApi {
 
 		String clientId = this.getAppId();
 		String redirectUri = uriWithoutQuery(request.getRequestURL().toString());
-		String scope = "email,offline_access";
+		String scope = "email";
 
 		// prepare redirect
 
@@ -132,7 +132,7 @@ public class FacebookApi {
 
 		// check for error
 
-		if (user.has("error")) throw new IOException("Error from Graph API: " + user.getJSONObject("error").getString("message"));
+		if (user.has("error")) throw new IOException("Error from Facebook Graph API: " + user.getJSONObject("error").getString("message"));
 
 		// done
 

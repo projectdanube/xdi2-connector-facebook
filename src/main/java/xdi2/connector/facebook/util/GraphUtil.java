@@ -7,11 +7,13 @@ import xdi2.core.xri3.impl.XRI3Segment;
 
 public class GraphUtil {
 
+	private static final XRI3Segment XRI_FACEBOOK_OAUTH_TOKEN = new XRI3Segment("(https://facebook.com)$oauth$!($token)");
+	
 	private GraphUtil() { }
 
 	public static String retrieveAccessToken(Graph graph) {
 
-		ContextNode contextNode = graph.findContextNode(new XRI3Segment("$oauth$!(token)"), false);
+		ContextNode contextNode = graph.findContextNode(XRI_FACEBOOK_OAUTH_TOKEN, false);
 		if (contextNode == null) return null;
 
 		Literal literal = contextNode.getLiteral();
@@ -22,7 +24,7 @@ public class GraphUtil {
 
 	public static void storeAccessToken(Graph graph, String accessToken) {
 
-		ContextNode contextNode = graph.findContextNode(new XRI3Segment("$oauth$!(token)"), true);
+		ContextNode contextNode = graph.findContextNode(XRI_FACEBOOK_OAUTH_TOKEN, true);
 
 		if (contextNode.containsLiteral())
 			contextNode.getLiteral().setLiteralData(accessToken);

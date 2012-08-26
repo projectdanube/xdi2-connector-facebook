@@ -25,7 +25,7 @@ To build all components.
 
 Then access the web interface at
 
-	http://localhost:9090/connect
+	http://localhost:9090/
 
 Or use an XDI client to send XDI messages to
 
