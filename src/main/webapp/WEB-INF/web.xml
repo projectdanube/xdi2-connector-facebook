@@ -17,15 +17,6 @@
 		<url-pattern>/connect</url-pattern>
 	</servlet-mapping>
 
-	<servlet>
-		<servlet-name>MessageServlet</servlet-name>
-		<servlet-class>xdi2.connector.facebook.MessageServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>MessageServlet</servlet-name>
-		<url-pattern>/message</url-pattern>
-	</servlet-mapping>
-
 	<!-- XDI FILTER -->
 
 	<filter>

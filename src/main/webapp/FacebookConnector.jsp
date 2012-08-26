@@ -41,7 +41,7 @@
 
 	<p class="subheader">Send a message to my XDI endoint</p>
 
-	<form action="message" method="post">
+	<form action="connect" method="post">
 
 		<textarea name="input" style="width: 100%" rows="12"><%= request.getAttribute("input") != null ? request.getAttribute("input") : "" %></textarea><br>
 
