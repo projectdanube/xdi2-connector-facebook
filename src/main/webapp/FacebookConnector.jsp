@@ -23,7 +23,7 @@
 
 	<% if (request.getAttribute("feedback") != null) { %>
 
-		<p><font color="black"><%= request.getAttribute("feedback") != null ? request.getAttribute("feedback") : "" %></font></p>
+		<p><font color="#5e1bda"><%= request.getAttribute("feedback") != null ? request.getAttribute("feedback") : "" %></font></p>
 
 	<% } %>
 
@@ -39,7 +39,9 @@
 
 	</form>
 
-	<p class="subheader">Send a Message to my XDI endoint</p>
+	<p class="subheader">Send a Message to my XDI Endpoint</p>
+
+	<p>Certain parts of your graph will only be accessible if you have a Facebook API access token.</p>
 
 	<form action="connect" method="post">
 

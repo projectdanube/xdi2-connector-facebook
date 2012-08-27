@@ -122,11 +122,11 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 			try {
 
 				String accessToken = this.getFacebookApi().exchangeCodeForAccessToken(request);
-				if (accessToken == null) throw new Exception("No Access Token received.");
+				if (accessToken == null) throw new Exception("No access token received.");
 
 				GraphUtil.storeAccessToken(this.getGraph(), accessToken);
 
-				request.setAttribute("feedback", "&gt;&gt;&gt; Access Token successfully received and stored in graph.");
+				request.setAttribute("feedback", "Access token successfully received and stored in graph.");
 			} catch (Exception ex) {
 
 				request.setAttribute("error", ex.getMessage());
