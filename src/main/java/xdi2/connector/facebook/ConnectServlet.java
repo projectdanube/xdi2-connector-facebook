@@ -137,7 +137,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 		request.setAttribute("writeContexts", null);
 		request.setAttribute("writeOrdered", "on");
-		request.setAttribute("writePretty", null);
+		request.setAttribute("writePretty", "on");
 		request.setAttribute("input", sampleInput);
 		request.setAttribute("endpoint", request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/")) + sampleEndpoint);
 
