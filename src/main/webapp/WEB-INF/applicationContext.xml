@@ -39,7 +39,7 @@
 
 	<bean id="graph1" factory-bean="graphfactory1" factory-method="openGraph" />
 
-	<bean name="facebookContributor" class="xdi2.connector.facebook.contributor.FacebookContributor" init-method="init">
+	<bean name="facebookContributor" class="xdi2.connector.facebook.contributor.FacebookContributor">
 		<property name="graph" ref="graph1" />
 		<property name="facebookApi" ref="facebookApi" />
 	</bean>
@@ -53,15 +53,15 @@
 					<property name="bootstrapSharedSecret" value="s3cret" />
 					<property name="bootstrapLinkContract" value="true" />
 				</bean>
+				<bean class="xdi2.messaging.target.interceptor.impl.VariablesInterceptor" />
+				<bean class="xdi2.messaging.target.interceptor.impl.ExpandDollarIsInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.CheckOwnerInterceptor" />
+				<ref bean="facebookContributor" />
 			</util:list>
 		</property>
 		<property name="contributors">
 			<util:map>
-				<entry key="=!1111$!(+firstname)" value-ref="facebookContributor" />
-				<entry key="=!1111$!(+lastname)" value-ref="facebookContributor" />
-				<entry key="=!1111$!(+gender)" value-ref="facebookContributor" />
-				<entry key="=!1111$!(+email)" value-ref="facebookContributor" />
+				<entry key="(https://facebook.com)" value-ref="facebookContributor" />
 			</util:map>
 		</property>
 	</bean>
