@@ -50,7 +50,7 @@ public class FacebookApi {
 	public void startOAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		String clientId = this.getAppId();
-		String redirectUri = uriWithoutQuery(request.getRequestURL().toString());
+		String redirectUri = request.getRequestURL().toString();
 		String scope = "email";
 
 		// prepare redirect
@@ -72,7 +72,7 @@ public class FacebookApi {
 
 		String clientId = this.getAppId();
 		String clientSecret = this.getAppSecret();
-		String redirectUri = uriWithoutQuery(request.getRequestURL().toString());
+		String redirectUri = request.getRequestURL().toString();
 		String code = request.getParameter("code");
 
 		log.debug("Exchanging Code '" + code + "'");
@@ -110,7 +110,7 @@ public class FacebookApi {
 	public JSONObject getUser(String accessToken) throws IOException, JSONException {
 
 		if (accessToken == null) throw new NullPointerException();
-		
+
 		log.debug("Retrieving User for Access Token '" + accessToken + "'");
 
 		// send request
@@ -138,11 +138,6 @@ public class FacebookApi {
 
 		log.debug("User: " + user);
 		return user;
-	}
-
-	private static String uriWithoutQuery(String url) {
-
-		return url.contains("?") ? url.substring(url.indexOf("?")) : url;
 	}
 
 	public String getAppId() {
