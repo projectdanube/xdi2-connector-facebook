@@ -32,12 +32,31 @@
 	<p>This step will initiate an OAuth "code flow" (also known as "server-side flow") to the Facebook API, in order to obtain an access token.</p>
 	<p>The token is then stored in your XDI graph, where it is picked up and used by the XDI2 server to handle requests to your Facebook XDI context.</p>
 
-	<form action="connect" method="get">
+	<table>
+	<tr>
+	
+	<td><img src="images/oauth2-logo.png" align="middle" style="float:left;padding-right:10px;"></td>
+
+	<td>
+	<form action="connect" method="get" style="float:left;padding-right:10px;">
 
 		<input type="hidden" name="startoauth" value="1">
-		<input type="submit" value="Go!">
+		<input type="submit" value="Request Access Token!">
 
 	</form>
+	</td>
+
+	<td>
+	<form action="connect" method="get">
+
+		<input type="hidden" name="revokeoauth" value="1">
+		<input type="submit" value="Revoke Access Token!">
+
+	</form>
+	</td>
+	
+	</tr>
+	</table>
 
 	<p class="subheader">Send a Message to my XDI Endpoint</p>
 

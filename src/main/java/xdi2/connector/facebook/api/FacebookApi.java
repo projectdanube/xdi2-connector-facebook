@@ -13,6 +13,7 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
@@ -107,6 +108,36 @@ public class FacebookApi {
 		return accessToken;
 	}
 
+	public void revokeAccessToken(String accessToken) throws IOException, JSONException {
+
+		if (accessToken == null) throw new NullPointerException();
+
+		log.debug("Revoking Access Token '" + accessToken + "'");
+
+		// send request
+
+		StringBuffer location = new StringBuffer("https://graph.facebook.com/me/permissions?");
+		location.append("access_token=" + accessToken);
+
+		HttpDelete httpDelete = new HttpDelete(URI.create(location.toString()));
+		HttpResponse httpResponse = this.httpClient.execute(httpDelete);
+		HttpEntity httpEntity = httpResponse.getEntity();
+
+		// read response
+
+		String content = EntityUtils.toString(httpEntity);
+
+		EntityUtils.consume(httpEntity);
+
+		// check for error
+
+		if (! "true".equals(content)) throw new IOException("Error from Facebook Graph API: " + content);
+
+		// done
+
+		log.debug("Access token revoked.");
+	}
+
 	public JSONObject getUser(String accessToken) throws IOException, JSONException {
 
 		if (accessToken == null) throw new NullPointerException();
@@ -125,7 +156,6 @@ public class FacebookApi {
 		// read response
 
 		String content = EntityUtils.toString(httpEntity);
-
 		JSONObject user = new JSONObject(content);
 
 		EntityUtils.consume(httpEntity);

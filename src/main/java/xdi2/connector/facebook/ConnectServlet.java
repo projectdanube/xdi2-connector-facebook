@@ -90,7 +90,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 		log.debug("Incoming GET request to " + request.getRequestURL() + ". Content-Type: " + request.getContentType() + ", Content-Length: " + request.getContentLength());
 
-		// redirect to Facebook?
+		// start OAuth?
 
 		if (request.getParameter("startoauth") != null) {
 
@@ -104,7 +104,27 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 			}
 		}
 
-		// error from Facebook?
+		// revoke OAuth?
+
+		if (request.getParameter("revokeoauth") != null) {
+
+			try {
+
+				String accessToken = GraphUtil.retrieveAccessToken(this.getGraph());
+				if (accessToken == null) throw new Exception("No access token in graph.");
+
+				this.getFacebookApi().revokeAccessToken(accessToken);
+
+				GraphUtil.removeAccessToken(this.getGraph());
+
+				request.setAttribute("feedback", "Access token successfully revoked and removed from graph.");
+			} catch (Exception ex) {
+
+				request.setAttribute("error", ex.getMessage());
+			}
+		}
+
+		// error from OAuth?
 
 		if (request.getParameter("error") != null) {
 
@@ -112,7 +132,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 			if (errorDescription == null) errorDescription = request.getParameter("error_reason");
 			if (errorDescription == null) errorDescription = request.getParameter("error");
 
-			request.setAttribute("error", "Error from Facebook API: " + errorDescription);
+			request.setAttribute("error", "OAuth error: " + errorDescription);
 		}
 
 		// callback from Facebook?

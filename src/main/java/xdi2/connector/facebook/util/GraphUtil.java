@@ -31,4 +31,12 @@ public class GraphUtil {
 		else
 			contextNode.createLiteral(accessToken);
 	}
+
+	public static void removeAccessToken(Graph graph) {
+
+		ContextNode contextNode = graph.findContextNode(XRI_FACEBOOK_OAUTH_TOKEN, false);
+		if (contextNode == null) return;
+
+		contextNode.delete();
+	}
 }
