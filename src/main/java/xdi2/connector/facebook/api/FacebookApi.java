@@ -2,6 +2,7 @@ package xdi2.connector.facebook.api;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class FacebookApi {
 	public void startOAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		String clientId = this.getAppId();
-		String redirectUri = request.getRequestURL().toString();
+		String redirectUri = uriWithoutQuery(request.getRequestURL().toString());
 		String scope = "email";
 
 		// prepare redirect
@@ -59,9 +60,9 @@ public class FacebookApi {
 		log.debug("Starting OAuth...");
 
 		StringBuffer location = new StringBuffer("https://www.facebook.com/dialog/oauth/?");
-		location.append("client_id=" + clientId);
-		location.append("&redirect_uri=" + redirectUri);
-		location.append("&scope=" + scope);
+		location.append("client_id=" + URLEncoder.encode(clientId, "UTF-8"));
+		location.append("&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8"));
+		location.append("&scope=" + URLEncoder.encode(scope, "UTF-8"));
 
 		// done
 
@@ -73,7 +74,7 @@ public class FacebookApi {
 
 		String clientId = this.getAppId();
 		String clientSecret = this.getAppSecret();
-		String redirectUri = request.getRequestURL().toString();
+		String redirectUri = uriWithoutQuery(request.getRequestURL().toString());
 		String code = request.getParameter("code");
 
 		log.debug("Exchanging Code '" + code + "'");
@@ -81,10 +82,10 @@ public class FacebookApi {
 		// send request
 
 		StringBuffer location = new StringBuffer("https://graph.facebook.com/oauth/access_token?");
-		location.append("client_id=" + clientId);
-		location.append("&client_secret=" + clientSecret);
-		location.append("&redirect_uri=" + redirectUri);
-		location.append("&code=" + code);
+		location.append("client_id=" + URLEncoder.encode(clientId, "UTF-8"));
+		location.append("&client_secret=" + URLEncoder.encode(clientSecret, "UTF-8"));
+		location.append("&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8"));
+		location.append("&code=" + URLEncoder.encode(code, "UTF-8"));
 
 		HttpGet httpGet = new HttpGet(URI.create(location.toString()));
 		HttpResponse httpResponse = this.httpClient.execute(httpGet);
@@ -168,6 +169,11 @@ public class FacebookApi {
 
 		log.debug("User: " + user);
 		return user;
+	}
+
+	private static String uriWithoutQuery(String url) {
+
+		return url.contains("?") ? url.substring(url.indexOf("?")) : url;
 	}
 
 	public String getAppId() {
