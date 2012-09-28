@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>xdi2</groupId>
 	<artifactId>xdi2-connector-facebook</artifactId>
-	<packaging>war</packaging>
+	<packaging>${packaging.type}</packaging>
 	<version>0.1-SNAPSHOT</version>
 	<name>xdi2-connector-facebook</name>
 
@@ -49,7 +49,7 @@
 				<version>1.7</version>
 				<executions>
 					<execution>
-						<id>execution1</id>
+						<id>execution</id>
 						<phase>site</phase>
 						<inherited>false</inherited>
 						<configuration>
@@ -71,23 +71,6 @@
 				<version>2.12</version>
 				<configuration>
 					<workingDirectory>${basedir}/../tmp</workingDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>execution</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<includeScope>runtime</includeScope>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -114,57 +97,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.2</version>
-			</plugin>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>maven-jetty-plugin</artifactId>
-				<version>6.1.26</version>
-				<configuration>
-					<jettyEnvXml>
-						${basedir}/src/test/resources/jetty-env.xml
-					</jettyEnvXml>
-					<contextPath>/</contextPath>
-					<useTestClasspath>true</useTestClasspath>
-					<systemProperties>
-						<systemProperty>
-							<name>jetty.port</name>
-							<value>9090</value>
-						</systemProperty>
-						<systemProperty>
-							<name>slf4j</name>
-							<value>true</value>
-						</systemProperty>
-						<systemProperty>
-							<name>log4j.configuration</name>
-							<value>file:${basedir}/src/main/resources/log4j.properties</value>
-						</systemProperty>
-					</systemProperties>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-api</artifactId>
-						<version>1.6.4</version>
-						<scope>compile</scope>
-					</dependency>
-					<dependency>
-						<groupId>org.slf4j</groupId>
-						<artifactId>jcl-over-slf4j</artifactId>
-						<version>1.6.4</version>
-						<scope>compile</scope>
-					</dependency>
-					<dependency>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-log4j12</artifactId>
-						<version>1.6.4</version>
-						<scope>compile</scope>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 
@@ -233,18 +165,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>xdi2</groupId>
-			<artifactId>xdi2-client</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>xdi2</groupId>
-			<artifactId>xdi2-server</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.2.1</version>
@@ -257,5 +177,161 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+
+	<profiles>
+
+		<profile>
+
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<properties>
+				<packaging.type>war</packaging.type>
+			</properties>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.2</version>
+					</plugin>
+					<plugin>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>maven-jetty-plugin</artifactId>
+						<version>6.1.26</version>
+						<configuration>
+							<jettyEnvXml>
+								${basedir}/src/test/resources/jetty-env.xml
+							</jettyEnvXml>
+							<contextPath>/</contextPath>
+							<useTestClasspath>true</useTestClasspath>
+							<systemProperties>
+								<systemProperty>
+									<name>jetty.port</name>
+									<value>9090</value>
+								</systemProperty>
+								<systemProperty>
+									<name>slf4j</name>
+									<value>true</value>
+								</systemProperty>
+								<systemProperty>
+									<name>log4j.configuration</name>
+									<value>file:${basedir}/src/main/resources/log4j.properties</value>
+								</systemProperty>
+							</systemProperties>
+						</configuration>
+						<dependencies>
+							<dependency>
+								<groupId>org.slf4j</groupId>
+								<artifactId>slf4j-api</artifactId>
+								<version>1.6.4</version>
+								<scope>compile</scope>
+							</dependency>
+							<dependency>
+								<groupId>org.slf4j</groupId>
+								<artifactId>jcl-over-slf4j</artifactId>
+								<version>1.6.4</version>
+								<scope>compile</scope>
+							</dependency>
+							<dependency>
+								<groupId>org.slf4j</groupId>
+								<artifactId>slf4j-log4j12</artifactId>
+								<version>1.6.4</version>
+								<scope>compile</scope>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+
+			<dependencies>
+				<dependency>
+					<groupId>xdi2</groupId>
+					<artifactId>xdi2-client</artifactId>
+					<version>0.1-SNAPSHOT</version>
+					<scope>compile</scope>
+				</dependency>
+				<dependency>
+					<groupId>xdi2</groupId>
+					<artifactId>xdi2-server</artifactId>
+					<version>0.1-SNAPSHOT</version>
+					<scope>compile</scope>
+				</dependency>
+			</dependencies>
+
+		</profile>
+
+		<profile>
+
+			<id>xdi2-module</id>
+
+			<properties>
+				<packaging.type>jar</packaging.type>
+			</properties>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>2.1</version>
+						<executions>
+							<execution>
+								<id>execution</id>
+								<phase>package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<includeScope>runtime</includeScope>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>2.3</version>
+						<executions>
+							<execution>
+								<id>src</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<descriptors>
+								<descriptor>
+									${project.basedir}/assembly-descriptor.xml
+								</descriptor>
+							</descriptors>
+							<tarLongFileMode>gnu</tarLongFileMode>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+
+			<dependencies>
+				<dependency>
+					<groupId>xdi2</groupId>
+					<artifactId>xdi2-client</artifactId>
+					<version>0.1-SNAPSHOT</version>
+					<scope>provided</scope>
+				</dependency>
+				<dependency>
+					<groupId>xdi2</groupId>
+					<artifactId>xdi2-server</artifactId>
+					<version>0.1-SNAPSHOT</version>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>
+
+		</profile>
+
+	</profiles>
 
 </project>
