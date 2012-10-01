@@ -1,5 +1,6 @@
 package xdi2.connector.facebook.api;
 
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -25,6 +26,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import xdi2.core.xri3.impl.XRI3Segment;
+
 public class FacebookApi {
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookApi.class);
@@ -49,11 +52,12 @@ public class FacebookApi {
 		this.httpClient.getConnectionManager().shutdown();
 	}
 
-	public void startOAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void startOAuth(HttpServletRequest request, HttpServletResponse response, XRI3Segment userXri) throws IOException {
 
 		String clientId = this.getAppId();
 		String redirectUri = uriWithoutQuery(request.getRequestURL().toString());
 		String scope = "email";
+		String state = userXri.toString();
 
 		// prepare redirect
 
@@ -63,11 +67,25 @@ public class FacebookApi {
 		location.append("client_id=" + URLEncoder.encode(clientId, "UTF-8"));
 		location.append("&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8"));
 		location.append("&scope=" + URLEncoder.encode(scope, "UTF-8"));
+		location.append("&state=" + URLEncoder.encode(state, "UTF-8"));
 
 		// done
 
 		log.debug("Redirecting to " + location.toString());
 		response.sendRedirect(location.toString());
+	}
+
+	public void checkState(HttpServletRequest request, XRI3Segment userXri) throws IOException {
+
+		String state = request.getParameter("state");
+
+		if (state == null) {
+			
+			log.warn("No OAuth state received.");
+			return;
+		}
+
+		if (! userXri.toString().equals(state)) throw new IOException("Invalid state: " + state);
 	}
 
 	public String exchangeCodeForAccessToken(HttpServletRequest request) throws IOException, HttpException {
