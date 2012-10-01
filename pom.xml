@@ -266,7 +266,7 @@
 
 		<profile>
 
-			<id>xdi2-module</id>
+			<id>xdi2-plugin</id>
 
 			<properties>
 				<packaging.type>jar</packaging.type>
