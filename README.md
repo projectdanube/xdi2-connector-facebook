@@ -33,6 +33,12 @@ Or use an XDI client to send XDI messages to
 
     http://localhost:9090/xdi/personal
 
+### How to build as XDI2 plugin
+
+Run
+
+    mvn clean package -P xdi2-plugin
+
 ### Community
 
 Google Group: http://groups.google.com/group/xdi2
