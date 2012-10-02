@@ -119,7 +119,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorCall(addresses={"($)"})
+	@ContributorCall(addresses={"+(user)($)"})
 	private class FacebookUserFieldContributor extends AbstractContributor {
 
 		private FacebookUserFieldContributor() {
@@ -142,17 +142,19 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			try {
 
-				String facebookUserFieldIdentifier = FacebookContributor.this.facebookMapping.facebookDataXriToFacebookUserFieldIdentifier(facebookDataXri);
-				if (facebookUserFieldIdentifier == null) return false;
+				String facebookObjectIdentifier = FacebookContributor.this.facebookMapping.facebookDataXriToFacebookObjectIdentifier(facebookDataXri);
+				String facebookFieldIdentifier = FacebookContributor.this.facebookMapping.facebookDataXriToFacebookFieldIdentifier(facebookDataXri);
+				if (facebookObjectIdentifier == null) return false;
+				if (facebookFieldIdentifier == null) return false;
 
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getGraph(), userXri);
 				if (accessToken == null) throw new Exception("No access token.");
 
 				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
 				if (user == null) throw new Exception("No user.");
-				if (! user.has(facebookUserFieldIdentifier)) return false;
+				if (! user.has(facebookFieldIdentifier)) return false;
 
-				facebookValue = user.getString(facebookUserFieldIdentifier);
+				facebookValue = user.getString(facebookFieldIdentifier);
 			} catch (Exception ex) {
 
 				throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);

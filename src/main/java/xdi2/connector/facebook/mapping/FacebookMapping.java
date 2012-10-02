@@ -19,32 +19,59 @@ public class FacebookMapping {
 	private Graph mappingGraph;
 
 	/**
-	 * Converts a Facebook data XRI to a native Facebook user field identifier.
-	 * Example: $!(first_name) --> first_name
+	 * Converts a Facebook data XRI to a native Facebook object identifier.
+	 * Example: +(user)$!(+(first_name)) --> user
 	 */
-	public String facebookDataXriToFacebookUserFieldIdentifier(XRI3Segment facebookDataXri) {
+	public String facebookDataXriToFacebookObjectIdentifier(XRI3Segment facebookDataXri) {
+
+		if (facebookDataXri == null) throw new NullPointerException();
 
 		// convert
 
-		String facebookUserFieldIdentifier = subSegmentXRefValue(facebookDataXri, 0);
+		String facebookObjectIdentifier = Dictionary.instanceXriToNativeIdentifier(Multiplicity.baseArcXri((XRI3SubSegment) facebookDataXri.getSubSegment(0)));
 
 		// done
 
-		if (log.isDebugEnabled()) log.debug("Converted " + facebookDataXri + " to " + facebookUserFieldIdentifier);
+		if (log.isDebugEnabled()) log.debug("Converted " + facebookDataXri + " to " + facebookObjectIdentifier);
 
-		return facebookUserFieldIdentifier;
+		return facebookObjectIdentifier;
+	}
+
+	/**
+	 * Converts a Facebook data XRI to a native Facebook field identifier.
+	 * Example: +(user)$!(+(first_name)) --> first_name
+	 */
+	public String facebookDataXriToFacebookFieldIdentifier(XRI3Segment facebookDataXri) {
+
+		if (facebookDataXri == null) throw new NullPointerException();
+
+		// convert
+
+		String facebookFieldIdentifier = Dictionary.instanceXriToNativeIdentifier(Multiplicity.baseArcXri((XRI3SubSegment) facebookDataXri.getSubSegment(1)));
+
+		// done
+
+		if (log.isDebugEnabled()) log.debug("Converted " + facebookDataXri + " to " + facebookFieldIdentifier);
+
+		return facebookFieldIdentifier;
 	}
 
 	/**
 	 * Maps and converts a Facebook data XRI to an XDI data XRI.
-	 * Example: $!(first_name) --> +first$!(+name)
+	 * Example: +(user)$!(+(first_name)) --> +first$!(+name)
 	 */
-	public XRI3Segment facebookDataXriToXdiDataXri(XRI3Segment facebookUserFieldXri) {
+	public XRI3Segment facebookDataXriToXdiDataXri(XRI3Segment facebookDataXri) {
+
+		if (facebookDataXri == null) throw new NullPointerException();
 
 		// map
 
-		XRI3Segment facebookDataDictionaryXri = new XRI3Segment("" + XRI_S_FACEBOOK_CONTEXT + "+(+(" + subSegmentXRefValue(facebookUserFieldXri, 0) + "))");
+		XRI3SubSegment facebookObjectXri = Dictionary.nativeIdentifierToInstanceXri(this.facebookDataXriToFacebookObjectIdentifier(facebookDataXri));
+		XRI3SubSegment facebookFieldXri = Dictionary.nativeIdentifierToInstanceXri(this.facebookDataXriToFacebookFieldIdentifier(facebookDataXri));
+
+		XRI3Segment facebookDataDictionaryXri = new XRI3Segment("" + XRI_S_FACEBOOK_CONTEXT + Dictionary.instanceXriToDictionaryXri(facebookObjectXri) + Dictionary.instanceXriToDictionaryXri(facebookFieldXri));
 		ContextNode facebookDataDictionaryContextNode = this.mappingGraph.findContextNode(facebookDataDictionaryXri, false);
+		if (facebookDataDictionaryContextNode == null) return null;
 
 		ContextNode xdiDataDictionaryContextNode = Dictionary.getCanonicalContextNode(facebookDataDictionaryContextNode);
 		XRI3Segment xdiDataDictionaryXri = xdiDataDictionaryContextNode.getXri();
@@ -57,10 +84,10 @@ public class FacebookMapping {
 
 			if (i + 1 < xdiDataDictionaryXri.getNumSubSegments()) {
 
-				buffer.append(Multiplicity.entitySingletonArcXri((XRI3SubSegment) xdiDataDictionaryXri.getSubSegment(i)).toString());
+				buffer.append(Multiplicity.entitySingletonArcXri(Dictionary.dictionaryXriToInstanceXri((XRI3SubSegment) xdiDataDictionaryXri.getSubSegment(i))));
 			} else {
 
-				buffer.append(Multiplicity.attributeSingletonArcXri((XRI3SubSegment) xdiDataDictionaryXri.getSubSegment(i)).toString());
+				buffer.append(Multiplicity.attributeSingletonArcXri(Dictionary.dictionaryXriToInstanceXri((XRI3SubSegment) xdiDataDictionaryXri.getSubSegment(i))));
 			}
 		}
 
@@ -68,7 +95,7 @@ public class FacebookMapping {
 
 		// done
 
-		if (log.isDebugEnabled()) log.debug("Mapped and converted " + facebookUserFieldXri + " to " + xdiDataXri);
+		if (log.isDebugEnabled()) log.debug("Mapped and converted " + facebookDataXri + " to " + xdiDataXri);
 
 		return xdiDataXri;
 	}
@@ -85,17 +112,5 @@ public class FacebookMapping {
 	public void setMappingGraph(Graph mappingGraph) {
 	
 		this.mappingGraph = mappingGraph;
-	}
-
-	/*
-	 * Helper methods
-	 */
-	
-	private static String subSegmentXRefValue(XRI3Segment xri, int i) {
-		
-		if (! xri.getSubSegment(i).hasXRef()) return null;
-		if (! xri.getSubSegment(i).getXRef().hasXRIReference()) return null;
-
-		return xri.getFirstSubSegment().getXRef().getXRIReference().toString();
 	}
 }
