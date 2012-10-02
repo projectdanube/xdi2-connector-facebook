@@ -49,7 +49,7 @@
 				<version>1.7</version>
 				<executions>
 					<execution>
-						<id>execution</id>
+						<id>execution1</id>
 						<phase>site</phase>
 						<inherited>false</inherited>
 						<configuration>
