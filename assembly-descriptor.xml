@@ -15,7 +15,7 @@
 			<directory>target/</directory>
 			<outputDirectory>/</outputDirectory>
 			<includes>
-				<include>${project.build.finalName}</include>
+				<include>*.jar</include>
 			</includes>
 		</fileSet>
 
