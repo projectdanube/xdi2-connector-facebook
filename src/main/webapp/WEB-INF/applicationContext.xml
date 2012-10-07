@@ -35,7 +35,7 @@
 	<bean id="graph1" factory-bean="graphfactory1" factory-method="openGraph" />
 
 	<bean id="facebookContributor" class="xdi2.connector.facebook.contributor.FacebookContributor">
-		<property name="graph" ref="graph1" />
+		<property name="tokenGraph" ref="graph1" />
 		<property name="facebookApi" ref="facebookApi" />
 		<property name="facebookMapping" ref="facebookMapping" />
 	</bean>

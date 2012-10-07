@@ -5,8 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
+import xdi2.core.exceptions.Xdi2RuntimeException;
 import xdi2.core.features.dictionary.Dictionary;
 import xdi2.core.features.multiplicity.Multiplicity;
+import xdi2.core.impl.memory.MemoryGraphFactory;
+import xdi2.core.io.XDIReaderRegistry;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.core.xri3.impl.XRI3SubSegment;
 
@@ -16,7 +19,29 @@ public class FacebookMapping {
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookMapping.class);
 
+	private static FacebookMapping instance;
+
 	private Graph mappingGraph;
+	
+	public FacebookMapping() {
+
+		this.mappingGraph = MemoryGraphFactory.getInstance().openGraph();
+
+		try {
+
+			XDIReaderRegistry.getAuto().read(this.mappingGraph, FacebookMapping.class.getResourceAsStream("mapping.xdi"));
+		} catch (Exception ex) {
+
+			throw new Xdi2RuntimeException(ex.getMessage(), ex);
+		}
+	}
+
+	public static FacebookMapping getInstance() {
+		
+		if (instance == null) instance = new FacebookMapping();
+		
+		return instance;
+	}
 
 	/**
 	 * Converts a Facebook data XRI to a native Facebook object identifier.
@@ -105,12 +130,12 @@ public class FacebookMapping {
 	 */
 
 	public Graph getMappingGraph() {
-	
+
 		return this.mappingGraph;
 	}
 
 	public void setMappingGraph(Graph mappingGraph) {
-	
+
 		this.mappingGraph = mappingGraph;
 	}
 }

@@ -100,7 +100,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 			try {
 
-				this.getFacebookApi().startOAuth(request, response, userXri);
+				this.getFacebookApi().startOAuth(request, response, null, userXri);
 				return;
 			} catch (Exception ex) {
 

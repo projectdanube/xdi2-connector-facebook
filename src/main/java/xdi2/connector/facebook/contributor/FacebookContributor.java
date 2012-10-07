@@ -27,7 +27,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookContributor.class);
 
-	private Graph graph;
+	private Graph tokenGraph;
 	private FacebookApi facebookApi;
 	private FacebookMapping facebookMapping;
 
@@ -89,7 +89,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			try {
 
-				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getGraph(), userXri);
+				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
 				if (accessToken == null) throw new Exception("No access token.");
 
 				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
@@ -147,7 +147,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 				if (facebookObjectIdentifier == null) return false;
 				if (facebookFieldIdentifier == null) return false;
 
-				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getGraph(), userXri);
+				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
 				if (accessToken == null) throw new Exception("No access token.");
 
 				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
@@ -195,14 +195,14 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	 * Getters and setters
 	 */
 
-	public Graph getGraph() {
+	public Graph getTokenGraph() {
 
-		return this.graph;
+		return this.tokenGraph;
 	}
 
-	public void setGraph(Graph graph) {
+	public void setTokenGraph(Graph tokenGraph) {
 
-		this.graph = graph;
+		this.tokenGraph = tokenGraph;
 	}
 
 	public FacebookApi getFacebookApi() {
