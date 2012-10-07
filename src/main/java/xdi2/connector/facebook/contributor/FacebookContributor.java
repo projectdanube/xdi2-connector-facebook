@@ -59,6 +59,11 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 			contributor.setTokenGraph(((GraphMessagingTarget) prototypingContext.getMessagingTarget()).getGraph());
 		}
 
+		// set api and mapping
+
+		contributor.setFacebookApi(this.getFacebookApi());
+		contributor.setFacebookMapping(this.getFacebookMapping());
+
 		// done
 
 		return contributor;
