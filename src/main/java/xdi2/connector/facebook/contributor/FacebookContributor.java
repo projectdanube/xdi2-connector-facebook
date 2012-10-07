@@ -19,11 +19,14 @@ import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
 import xdi2.messaging.exceptions.Xdi2MessagingException;
 import xdi2.messaging.target.ExecutionContext;
+import xdi2.messaging.target.Prototype;
 import xdi2.messaging.target.contributor.AbstractContributor;
-import xdi2.messaging.target.contributor.ContributorCall;
+import xdi2.messaging.target.contributor.ContributorXri;
+import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
 import xdi2.messaging.target.interceptor.MessageEnvelopeInterceptor;
 
-public class FacebookContributor extends AbstractContributor implements MessageEnvelopeInterceptor {
+@ContributorXri(addresses={"(https://facebook.com)"})
+public class FacebookContributor extends AbstractContributor implements MessageEnvelopeInterceptor, Prototype<FacebookContributor> {
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookContributor.class);
 
@@ -36,6 +39,29 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		super();
 
 		this.getContributors().addContributor(new FacebookUserContributor());
+	}
+
+	/*
+	 * Prototype
+	 */
+
+	@Override
+	public FacebookContributor instanceFor(PrototypingContext prototypingContext) throws Xdi2MessagingException {
+
+		// create new contributor
+
+		FacebookContributor contributor = new FacebookContributor();
+
+		// set the token graph
+
+		if (this.tokenGraph == null && prototypingContext.getMessagingTarget() instanceof GraphMessagingTarget) {
+
+			contributor.setTokenGraph(((GraphMessagingTarget) prototypingContext.getMessagingTarget()).getGraph());
+		}
+
+		// done
+
+		return contributor;
 	}
 
 	/*
@@ -65,7 +91,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	 * Sub-Contributors
 	 */
 
-	@ContributorCall(addresses={"($)"})
+	@ContributorXri(addresses={"($)"})
 	private class FacebookUserContributor extends AbstractContributor {
 
 		private FacebookUserContributor() {
@@ -119,7 +145,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorCall(addresses={"+(user)($)"})
+	@ContributorXri(addresses={"+(user)($)"})
 	private class FacebookUserFieldContributor extends AbstractContributor {
 
 		private FacebookUserFieldContributor() {
