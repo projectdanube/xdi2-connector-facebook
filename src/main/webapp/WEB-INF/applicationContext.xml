@@ -35,15 +35,15 @@
 	<bean id="graph1" factory-bean="graphfactory1" factory-method="openGraph" />
 
 	<bean id="facebookContributor" class="xdi2.connector.facebook.contributor.FacebookContributor">
-		<property name="facebookApi">
-			<bean class="xdi2.connector.facebook.api.FacebookApi" init-method="init" destroy-method="destroy">
-				<property name="appId" value="420250631345354" />
-				<property name="appSecret" value="c2feeda99926ab3c6096beaa8e6eca73" />
-			</bean>
-		</property>
+		<property name="facebookApi" ref="facebookApi" />
 		<property name="facebookMapping">
 			<bean class="xdi2.connector.facebook.mapping.FacebookMapping" />
 		</property>
+	</bean>
+
+	<bean id="facebookApi" class="xdi2.connector.facebook.api.FacebookApi" init-method="init" destroy-method="destroy">
+		<property name="appId" value="420250631345354" />
+		<property name="appSecret" value="c2feeda99926ab3c6096beaa8e6eca73" />
 	</bean>
 
 	<bean name="/facebook" class="xdi2.messaging.target.impl.graph.GraphMessagingTarget">
