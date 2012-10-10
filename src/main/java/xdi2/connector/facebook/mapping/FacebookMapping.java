@@ -15,7 +15,7 @@ import xdi2.core.xri3.impl.XRI3SubSegment;
 
 public class FacebookMapping {
 
-	public static final XRI3Segment XRI_S_FACEBOOK_CONTEXT = new XRI3Segment("(https://facebook.com)");
+	public static final XRI3Segment XRI_S_FACEBOOK_CONTEXT = new XRI3Segment("+(https://facebook.com/)");
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookMapping.class);
 

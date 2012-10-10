@@ -63,7 +63,7 @@
 		</property>
 		<property name="contributors">
 			<util:map>
-				<entry key="(https://facebook.com)" value-ref="facebookContributor" />
+				<entry key="+(https://facebook.com/)" value-ref="facebookContributor" />
 			</util:map>
 		</property>
 	</bean>
