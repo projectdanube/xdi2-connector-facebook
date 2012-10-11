@@ -6,3 +6,4 @@
 +(https://facebook.com/)+(+(user))+(+(locale))/$is/+(+locale)
 +(https://facebook.com/)+(+(user))+(+(email))/$is/+(+email)
 +(https://facebook.com/)+(+(user))+(+(website))/$is/+(+website)
++(https://facebook.com/)+(+(user))+(+(birthday))/$is/+(+birthday)

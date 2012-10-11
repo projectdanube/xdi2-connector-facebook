@@ -193,6 +193,8 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 				if (facebookObjectIdentifier == null) return false;
 				if (facebookFieldIdentifier == null) return false;
 
+				log.debug("facebookObjectIdentifier: " + facebookObjectIdentifier + ", facebookFieldIdentifier: " + facebookFieldIdentifier);
+
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
 				if (accessToken == null) throw new Exception("No access token.");
 
