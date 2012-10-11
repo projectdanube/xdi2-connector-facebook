@@ -310,6 +310,7 @@
 							</execution>
 						</executions>
 						<configuration>
+							<outputDirectory>${project.build.directory}/assembly</outputDirectory>
 							<descriptors>
 								<descriptor>
 									${project.basedir}/assembly-descriptor.xml

@@ -37,7 +37,7 @@ Or use an XDI client to send XDI messages to
 
 Run
 
-    mvn clean package -P xdi2-plugin
+    mvn clean install package -P xdi2-plugin
 
 ### Community
 
