@@ -3,7 +3,7 @@
 
 This is a connector module for the [XDI2](http://github.com/peacekeeper/xdi2) server.
 
-It can map personal data from the [Personal.com API](http://developer.personal.com/faq) to XDI. 
+It can map personal data from the [Facebook Graph API](https://developers.facebook.com/docs/reference/api/) to XDI. 
 
 ### Information
 
@@ -31,7 +31,7 @@ Then access the web interface at
 
 Or use an XDI client to send XDI messages to
 
-    http://localhost:9090/xdi/personal
+    http://localhost:9090/xdi/facebook
 
 ### How to build as XDI2 plugin
 
