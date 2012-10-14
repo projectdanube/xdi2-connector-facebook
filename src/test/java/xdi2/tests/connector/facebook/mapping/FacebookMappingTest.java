@@ -28,9 +28,12 @@ public class FacebookMappingTest extends TestCase {
 	public void testMapping() throws Exception {
 
 		XRI3Segment facebookDataXri = new XRI3Segment("+(user)$!(+(first_name))");
+		XRI3Segment xdiDataXri = new XRI3Segment("+first$!(+name)");
 
 		assertEquals("user", this.facebookMapping.facebookDataXriToFacebookObjectIdentifier(facebookDataXri));
 		assertEquals("first_name", this.facebookMapping.facebookDataXriToFacebookFieldIdentifier(facebookDataXri));
-		assertEquals(new XRI3Segment("+first$!(+name)"), this.facebookMapping.facebookDataXriToXdiDataXri(facebookDataXri));
+	
+		assertEquals(xdiDataXri, this.facebookMapping.facebookDataXriToXdiDataXri(facebookDataXri));
+		assertEquals(facebookDataXri, this.facebookMapping.xdiDataXriToFacebookDataXri(xdiDataXri));
 	}
 }
