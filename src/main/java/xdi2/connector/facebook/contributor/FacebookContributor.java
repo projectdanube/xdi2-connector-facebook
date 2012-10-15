@@ -129,6 +129,8 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userXri: " + userXri);
 
+			if (relativeContextNodeXri != null) return false;
+
 			// retrieve the Facebook user ID
 
 			String facebookUserId = null;
