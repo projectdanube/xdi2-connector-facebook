@@ -27,11 +27,11 @@ To build all components.
 
 Then access the web interface at
 
-	http://localhost:9090/
+	http://localhost:9091/
 
 Or use an XDI client to send XDI messages to
 
-    http://localhost:9090/xdi/facebook
+    http://localhost:9091/xdi/facebook
 
 ### How to build as XDI2 plugin
 
