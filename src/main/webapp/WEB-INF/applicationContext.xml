@@ -34,10 +34,19 @@
 
 	<bean id="graph1" factory-bean="graphfactory1" factory-method="openGraph" />
 
+	<bean id="facebookMappingGraphfactory" class="xdi2.core.impl.wrapped.classpath.ClasspathGraphFactory">
+		<property name="classpath" value="/xdi2/connector/facebook/mapping/mapping.xdi" />
+		<property name="mimeType" value="text/xdi;contexts=0;ordered=1" />
+	</bean>
+
+	<bean id="facebookMappingGraph" factory-bean="facebookMappingGraphfactory" factory-method="openGraph" />
+
 	<bean id="facebookContributor" class="xdi2.connector.facebook.contributor.FacebookContributor">
 		<property name="facebookApi" ref="facebookApi" />
 		<property name="facebookMapping">
-			<bean class="xdi2.connector.facebook.mapping.FacebookMapping" />
+			<bean class="xdi2.connector.facebook.mapping.FacebookMapping">
+				<property name="mappingGraph" ref="facebookMappingGraph" />
+			</bean>
 		</property>
 	</bean>
 
@@ -67,6 +76,13 @@
 				<entry key="+(https://facebook.com/)" value-ref="facebookContributor" />
 			</util:map>
 		</property>
+	</bean>
+
+	<!-- MESSAGING TARGET at /mapping -->
+	<!-- MessagingTarget: GraphMessagingTarget -->
+
+	<bean name="/mapping" class="xdi2.messaging.target.impl.graph.GraphMessagingTarget">
+		<property name="graph" ref="facebookMappingGraph" />
 	</bean>
 
 </beans>

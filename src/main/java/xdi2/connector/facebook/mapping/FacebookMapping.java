@@ -22,7 +22,7 @@ public class FacebookMapping {
 	private static FacebookMapping instance;
 
 	private Graph mappingGraph;
-	
+
 	public FacebookMapping() {
 
 		this.mappingGraph = MemoryGraphFactory.getInstance().openGraph();
@@ -37,9 +37,9 @@ public class FacebookMapping {
 	}
 
 	public static FacebookMapping getInstance() {
-		
+
 		if (instance == null) instance = new FacebookMapping();
-		
+
 		return instance;
 	}
 
@@ -90,16 +90,16 @@ public class FacebookMapping {
 		if (facebookDataXri == null) throw new NullPointerException();
 
 		// convert
-		
+
 		StringBuffer buffer1 = new StringBuffer();
 
 		for (int i=0; i<facebookDataXri.getNumSubSegments(); i++) {
-			
+
 			buffer1.append(Dictionary.instanceXriToDictionaryXri(Multiplicity.baseArcXri((XRI3SubSegment) facebookDataXri.getSubSegment(i))));
 		}
 
 		// map
-		
+
 		XRI3Segment facebookDataDictionaryXri = new XRI3Segment("" + XRI_S_FACEBOOK_CONTEXT + buffer1.toString());
 		ContextNode facebookDataDictionaryContextNode = this.mappingGraph.findContextNode(facebookDataDictionaryXri, false);
 		if (facebookDataDictionaryContextNode == null) return null;
@@ -140,23 +140,23 @@ public class FacebookMapping {
 		if (xdiDataXri == null) throw new NullPointerException();
 
 		// convert
-		
+
 		StringBuffer buffer1 = new StringBuffer();
 
 		for (int i=0; i<xdiDataXri.getNumSubSegments(); i++) {
-			
+
 			buffer1.append(Dictionary.instanceXriToDictionaryXri(Multiplicity.baseArcXri((XRI3SubSegment) xdiDataXri.getSubSegment(i))));
 		}
 
 		// map
-		
+
 		XRI3Segment xdiDataDictionaryXri = new XRI3Segment(buffer1.toString());
 		ContextNode xdiDataDictionaryContextNode = this.mappingGraph.findContextNode(xdiDataDictionaryXri, false);
 		if (xdiDataDictionaryContextNode == null) return null;
 
 		ContextNode facebookDataDictionaryContextNode = Dictionary.getSynonymContextNodes(xdiDataDictionaryContextNode).next();
 		XRI3Segment facebookDataDictionaryXri = facebookDataDictionaryContextNode.getXri();
-		
+
 		// convert
 
 		StringBuilder buffer2 = new StringBuilder();
