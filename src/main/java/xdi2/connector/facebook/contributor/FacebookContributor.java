@@ -40,6 +40,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 		super();
 
+		this.getContributors().addContributor(new FacebookEnabledContributor());
 		this.getContributors().addContributor(new FacebookUserContributor());
 	}
 
@@ -111,7 +112,19 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	 * Sub-Contributors
 	 */
 
-	@ContributorXri(addresses={"($$!)"})
+	@ContributorXri(addresses={"$!(+enabled)"})
+	private class FacebookEnabledContributor extends AbstractContributor {
+
+		@Override
+		public boolean getContext(XRI3Segment[] contributorXris, XRI3Segment relativeContextNodeXri, XRI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+
+			messageResult.getGraph().findContextNode(contextNodeXri, true).createLiteral("1");
+
+			return true;
+		}
+	}
+
+	@ContributorXri(addresses={"$!(+enabled)","($$!)"})
 	private class FacebookUserContributor extends AbstractContributor {
 
 		private FacebookUserContributor() {
