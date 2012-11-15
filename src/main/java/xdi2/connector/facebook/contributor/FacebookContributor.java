@@ -124,7 +124,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 	}
 
-	@ContributorXri(addresses={"$!(+enabled)","($$!)"})
+	@ContributorXri(addresses={"($$!)"})
 	private class FacebookUserContributor extends AbstractContributor {
 
 		private FacebookUserContributor() {
