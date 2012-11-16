@@ -10,12 +10,12 @@ import xdi2.core.features.dictionary.Dictionary;
 import xdi2.core.features.multiplicity.Multiplicity;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.io.XDIReaderRegistry;
-import xdi2.core.xri3.impl.XRI3Segment;
-import xdi2.core.xri3.impl.XRI3SubSegment;
+import xdi2.core.xri3.impl.XDI3Segment;
+import xdi2.core.xri3.impl.XDI3SubSegment;
 
 public class FacebookMapping {
 
-	public static final XRI3Segment XRI_S_FACEBOOK_CONTEXT = new XRI3Segment("+(https://facebook.com/)");
+	public static final XDI3Segment XRI_S_FACEBOOK_CONTEXT = new XDI3Segment("+(https://facebook.com/)");
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookMapping.class);
 
@@ -47,13 +47,13 @@ public class FacebookMapping {
 	 * Converts a Facebook data XRI to a native Facebook object identifier.
 	 * Example: +(user)$!(+(first_name)) --> user
 	 */
-	public String facebookDataXriToFacebookObjectIdentifier(XRI3Segment facebookDataXri) {
+	public String facebookDataXriToFacebookObjectIdentifier(XDI3Segment facebookDataXri) {
 
 		if (facebookDataXri == null) throw new NullPointerException();
 
 		// convert
 
-		String facebookObjectIdentifier = Dictionary.instanceXriToNativeIdentifier(Multiplicity.baseArcXri((XRI3SubSegment) facebookDataXri.getSubSegment(0)));
+		String facebookObjectIdentifier = Dictionary.instanceXriToNativeIdentifier(Multiplicity.baseArcXri((XDI3SubSegment) facebookDataXri.getSubSegment(0)));
 
 		// done
 
@@ -66,13 +66,13 @@ public class FacebookMapping {
 	 * Converts a Facebook data XRI to a native Facebook field identifier.
 	 * Example: +(user)$!(+(first_name)) --> first_name
 	 */
-	public String facebookDataXriToFacebookFieldIdentifier(XRI3Segment facebookDataXri) {
+	public String facebookDataXriToFacebookFieldIdentifier(XDI3Segment facebookDataXri) {
 
 		if (facebookDataXri == null) throw new NullPointerException();
 
 		// convert
 
-		String facebookFieldIdentifier = Dictionary.instanceXriToNativeIdentifier(Multiplicity.baseArcXri((XRI3SubSegment) facebookDataXri.getSubSegment(1)));
+		String facebookFieldIdentifier = Dictionary.instanceXriToNativeIdentifier(Multiplicity.baseArcXri((XDI3SubSegment) facebookDataXri.getSubSegment(1)));
 
 		// done
 
@@ -85,7 +85,7 @@ public class FacebookMapping {
 	 * Maps and converts a Facebook data XRI to an XDI data XRI.
 	 * Example: +(user)$!(+(first_name)) --> +first$!(+name)
 	 */
-	public XRI3Segment facebookDataXriToXdiDataXri(XRI3Segment facebookDataXri) {
+	public XDI3Segment facebookDataXriToXdiDataXri(XDI3Segment facebookDataXri) {
 
 		if (facebookDataXri == null) throw new NullPointerException();
 
@@ -95,17 +95,17 @@ public class FacebookMapping {
 
 		for (int i=0; i<facebookDataXri.getNumSubSegments(); i++) {
 
-			buffer1.append(Dictionary.instanceXriToDictionaryXri(Multiplicity.baseArcXri((XRI3SubSegment) facebookDataXri.getSubSegment(i))));
+			buffer1.append(Dictionary.instanceXriToDictionaryXri(Multiplicity.baseArcXri((XDI3SubSegment) facebookDataXri.getSubSegment(i))));
 		}
 
 		// map
 
-		XRI3Segment facebookDataDictionaryXri = new XRI3Segment("" + XRI_S_FACEBOOK_CONTEXT + buffer1.toString());
+		XDI3Segment facebookDataDictionaryXri = new XDI3Segment("" + XRI_S_FACEBOOK_CONTEXT + buffer1.toString());
 		ContextNode facebookDataDictionaryContextNode = this.mappingGraph.findContextNode(facebookDataDictionaryXri, false);
 		if (facebookDataDictionaryContextNode == null) return null;
 
 		ContextNode xdiDataDictionaryContextNode = Dictionary.getCanonicalContextNode(facebookDataDictionaryContextNode);
-		XRI3Segment xdiDataDictionaryXri = xdiDataDictionaryContextNode.getXri();
+		XDI3Segment xdiDataDictionaryXri = xdiDataDictionaryContextNode.getXri();
 
 		// convert
 
@@ -115,14 +115,14 @@ public class FacebookMapping {
 
 			if (i + 1 < xdiDataDictionaryXri.getNumSubSegments()) {
 
-				buffer2.append(Multiplicity.entitySingletonArcXri(Dictionary.dictionaryXriToInstanceXri((XRI3SubSegment) xdiDataDictionaryXri.getSubSegment(i))));
+				buffer2.append(Multiplicity.entitySingletonArcXri(Dictionary.dictionaryXriToInstanceXri((XDI3SubSegment) xdiDataDictionaryXri.getSubSegment(i))));
 			} else {
 
-				buffer2.append(Multiplicity.attributeSingletonArcXri(Dictionary.dictionaryXriToInstanceXri((XRI3SubSegment) xdiDataDictionaryXri.getSubSegment(i))));
+				buffer2.append(Multiplicity.attributeSingletonArcXri(Dictionary.dictionaryXriToInstanceXri((XDI3SubSegment) xdiDataDictionaryXri.getSubSegment(i))));
 			}
 		}
 
-		XRI3Segment xdiDataXri = new XRI3Segment(buffer2.toString());
+		XDI3Segment xdiDataXri = new XDI3Segment(buffer2.toString());
 
 		// done
 
@@ -135,7 +135,7 @@ public class FacebookMapping {
 	 * Maps and converts an XDI data XRI to a Facebook data XRI.
 	 * Example: +first$!(+name) --> +(user)$!(+(first_name)) 
 	 */
-	public XRI3Segment xdiDataXriToFacebookDataXri(XRI3Segment xdiDataXri) {
+	public XDI3Segment xdiDataXriToFacebookDataXri(XDI3Segment xdiDataXri) {
 
 		if (xdiDataXri == null) throw new NullPointerException();
 
@@ -145,17 +145,17 @@ public class FacebookMapping {
 
 		for (int i=0; i<xdiDataXri.getNumSubSegments(); i++) {
 
-			buffer1.append(Dictionary.instanceXriToDictionaryXri(Multiplicity.baseArcXri((XRI3SubSegment) xdiDataXri.getSubSegment(i))));
+			buffer1.append(Dictionary.instanceXriToDictionaryXri(Multiplicity.baseArcXri((XDI3SubSegment) xdiDataXri.getSubSegment(i))));
 		}
 
 		// map
 
-		XRI3Segment xdiDataDictionaryXri = new XRI3Segment(buffer1.toString());
+		XDI3Segment xdiDataDictionaryXri = new XDI3Segment(buffer1.toString());
 		ContextNode xdiDataDictionaryContextNode = this.mappingGraph.findContextNode(xdiDataDictionaryXri, false);
 		if (xdiDataDictionaryContextNode == null) return null;
 
 		ContextNode facebookDataDictionaryContextNode = Dictionary.getSynonymContextNodes(xdiDataDictionaryContextNode).next();
-		XRI3Segment facebookDataDictionaryXri = facebookDataDictionaryContextNode.getXri();
+		XDI3Segment facebookDataDictionaryXri = facebookDataDictionaryContextNode.getXri();
 
 		// convert
 
@@ -165,14 +165,14 @@ public class FacebookMapping {
 
 			if (i + 1 < facebookDataDictionaryXri.getNumSubSegments()) {
 
-				buffer2.append(Multiplicity.entitySingletonArcXri(Dictionary.dictionaryXriToInstanceXri((XRI3SubSegment) facebookDataDictionaryXri.getSubSegment(i))));
+				buffer2.append(Multiplicity.entitySingletonArcXri(Dictionary.dictionaryXriToInstanceXri((XDI3SubSegment) facebookDataDictionaryXri.getSubSegment(i))));
 			} else {
 
-				buffer2.append(Multiplicity.attributeSingletonArcXri(Dictionary.dictionaryXriToInstanceXri((XRI3SubSegment) facebookDataDictionaryXri.getSubSegment(i))));
+				buffer2.append(Multiplicity.attributeSingletonArcXri(Dictionary.dictionaryXriToInstanceXri((XDI3SubSegment) facebookDataDictionaryXri.getSubSegment(i))));
 			}
 		}
 
-		XRI3Segment facebookDataXri = new XRI3Segment(buffer2.toString());
+		XDI3Segment facebookDataXri = new XDI3Segment(buffer2.toString());
 
 		// done
 

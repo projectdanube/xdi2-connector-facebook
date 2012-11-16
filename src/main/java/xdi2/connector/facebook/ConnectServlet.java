@@ -28,7 +28,7 @@ import xdi2.core.io.XDIReader;
 import xdi2.core.io.XDIReaderRegistry;
 import xdi2.core.io.XDIWriter;
 import xdi2.core.io.XDIWriterRegistry;
-import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.core.xri3.impl.XDI3Segment;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
 
@@ -95,7 +95,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 		if ("Request Access Token!".equals(request.getParameter("submit"))) {
 
-			XRI3Segment userXri = new XRI3Segment(request.getParameter("userXri"));
+			XDI3Segment userXri = new XDI3Segment(request.getParameter("userXri"));
 			request.getSession().setAttribute("userXri", userXri);
 
 			try {
@@ -112,7 +112,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 		if ("Revoke Access Token!".equals(request.getParameter("submit"))) {
 
-			XRI3Segment userXri = new XRI3Segment(request.getParameter("userXri"));
+			XDI3Segment userXri = new XDI3Segment(request.getParameter("userXri"));
 			request.getSession().setAttribute("userXri", userXri);
 
 			try {
@@ -146,7 +146,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 		if (request.getParameter("code") != null) {
 
-			XRI3Segment userXri = (XRI3Segment) request.getSession().getAttribute("userXri");
+			XDI3Segment userXri = (XDI3Segment) request.getSession().getAttribute("userXri");
 
 			try {
 

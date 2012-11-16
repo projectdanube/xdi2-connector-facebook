@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import xdi2.connector.facebook.mapping.FacebookMapping;
 import xdi2.core.Graph;
 import xdi2.core.impl.memory.MemoryGraphFactory;
-import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.core.xri3.impl.XDI3Segment;
 
 public class FacebookMappingTest extends TestCase {
 
@@ -27,8 +27,8 @@ public class FacebookMappingTest extends TestCase {
 
 	public void testMapping() throws Exception {
 
-		XRI3Segment facebookDataXri = new XRI3Segment("+(user)$!(+(first_name))");
-		XRI3Segment xdiDataXri = new XRI3Segment("+first$!(+name)");
+		XDI3Segment facebookDataXri = new XDI3Segment("+(user)$!(+(first_name))");
+		XDI3Segment xdiDataXri = new XDI3Segment("+first$!(+name)");
 
 		assertEquals("user", this.facebookMapping.facebookDataXriToFacebookObjectIdentifier(facebookDataXri));
 		assertEquals("first_name", this.facebookMapping.facebookDataXriToFacebookFieldIdentifier(facebookDataXri));

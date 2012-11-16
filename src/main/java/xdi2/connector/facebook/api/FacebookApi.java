@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.core.xri3.impl.XDI3Segment;
 
 public class FacebookApi {
 
@@ -58,7 +58,7 @@ public class FacebookApi {
 		this.httpClient.getConnectionManager().shutdown();
 	}
 
-	public String startOAuth(HttpServletRequest request, String redirectUri, XRI3Segment userXri) throws IOException {
+	public String startOAuth(HttpServletRequest request, String redirectUri, XDI3Segment userXri) throws IOException {
 
 		String clientId = this.getAppId();
 		if (redirectUri == null) redirectUri = uriWithoutQuery(request.getRequestURL().toString());
@@ -81,7 +81,7 @@ public class FacebookApi {
 		return location.toString();
 	}
 
-	public void checkState(HttpServletRequest request, XRI3Segment userXri) throws IOException {
+	public void checkState(HttpServletRequest request, XDI3Segment userXri) throws IOException {
 
 		String state = request.getParameter("state");
 

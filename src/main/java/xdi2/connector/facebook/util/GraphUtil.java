@@ -4,16 +4,16 @@ import xdi2.connector.facebook.mapping.FacebookMapping;
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
 import xdi2.core.Literal;
-import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.core.xri3.impl.XDI3Segment;
 import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class GraphUtil {
 
 	private GraphUtil() { }
 
-	public static String retrieveAccessToken(Graph graph, XRI3Segment userXri) {
+	public static String retrieveAccessToken(Graph graph, XDI3Segment userXri) {
 
-		XRI3Segment contextNodeXri = new XRI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
+		XDI3Segment contextNodeXri = new XDI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
 
 		ContextNode contextNode = graph.findContextNode(contextNodeXri, false);
 		if (contextNode == null) return null;
@@ -24,9 +24,9 @@ public class GraphUtil {
 		return literal.getLiteralData();
 	}
 
-	public static void storeAccessToken(Graph graph, XRI3Segment userXri, String accessToken) {
+	public static void storeAccessToken(Graph graph, XDI3Segment userXri, String accessToken) {
 
-		XRI3Segment contextNodeXri = new XRI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
+		XDI3Segment contextNodeXri = new XDI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
 
 		ContextNode contextNode = graph.findContextNode(contextNodeXri, true);
 
@@ -36,9 +36,9 @@ public class GraphUtil {
 			contextNode.createLiteral(accessToken);
 	}
 
-	public static void removeAccessToken(Graph graph, XRI3Segment userXri) {
+	public static void removeAccessToken(Graph graph, XDI3Segment userXri) {
 
-		XRI3Segment contextNodeXri = new XRI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
+		XDI3Segment contextNodeXri = new XDI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
 
 		ContextNode contextNode = graph.findContextNode(contextNodeXri, false);
 		if (contextNode == null) return;

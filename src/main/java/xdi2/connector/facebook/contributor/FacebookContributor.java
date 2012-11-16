@@ -13,7 +13,7 @@ import xdi2.connector.facebook.util.GraphUtil;
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
 import xdi2.core.features.dictionary.Dictionary;
-import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.core.xri3.impl.XDI3Segment;
 import xdi2.messaging.GetOperation;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
@@ -116,7 +116,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	private class FacebookEnabledContributor extends AbstractContributor {
 
 		@Override
-		public boolean getContext(XRI3Segment[] contributorXris, XRI3Segment relativeContextNodeXri, XRI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			messageResult.getGraph().findContextNode(contextNodeXri, true).createLiteral("1");
 
@@ -135,10 +135,10 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 
 		@Override
-		public boolean getContext(XRI3Segment[] contributorXris, XRI3Segment relativeContextNodeXri, XRI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-			XRI3Segment facebookContextXri = contributorXris[contributorXris.length - 2];
-			XRI3Segment userXri = contributorXris[contributorXris.length - 1];
+			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 2];
+			XDI3Segment userXri = contributorXris[contributorXris.length - 1];
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userXri: " + userXri);
 
@@ -166,10 +166,10 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			if (facebookUserId != null) {
 
-				XRI3Segment facebookUserXri = new XRI3Segment("!" + facebookUserId);
+				XDI3Segment facebookUserXri = new XDI3Segment("!" + facebookUserId);
 
-				ContextNode facebookUserContextNode = messageResult.getGraph().findContextNode(new XRI3Segment("" + facebookContextXri + facebookUserXri), true);
-				ContextNode userContextNode = messageResult.getGraph().findContextNode(new XRI3Segment("" + facebookContextXri + userXri), true);
+				ContextNode facebookUserContextNode = messageResult.getGraph().findContextNode(new XDI3Segment("" + facebookContextXri + facebookUserXri), true);
+				ContextNode userContextNode = messageResult.getGraph().findContextNode(new XDI3Segment("" + facebookContextXri + userXri), true);
 
 				Dictionary.setCanonicalContextNode(facebookUserContextNode, userContextNode);
 			}
@@ -189,11 +189,11 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 
 		@Override
-		public boolean getContext(XRI3Segment[] contributorXris, XRI3Segment relativeContextNodeXri, XRI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-			XRI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
-			XRI3Segment userXri = contributorXris[contributorXris.length - 2];
-			XRI3Segment facebookDataXri = contributorXris[contributorXris.length - 1];
+			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
+			XDI3Segment userXri = contributorXris[contributorXris.length - 2];
+			XDI3Segment facebookDataXri = contributorXris[contributorXris.length - 1];
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userXri: " + userXri + ", facebookDataXri: " + facebookDataXri);
 
