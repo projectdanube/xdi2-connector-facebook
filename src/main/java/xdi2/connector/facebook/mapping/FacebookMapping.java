@@ -153,7 +153,7 @@ public class FacebookMapping {
 		ContextNode xdiDataDictionaryContextNode = this.mappingGraph.findContextNode(xdiDataDictionaryXri, false);
 		if (xdiDataDictionaryContextNode == null) return null;
 
-		ContextNode facebookDataDictionaryContextNode = Dictionary.getSynonymContextNodes(xdiDataDictionaryContextNode).next();
+		ContextNode facebookDataDictionaryContextNode = Dictionary.getEquivalenceContextNodes(xdiDataDictionaryContextNode).next();
 		XDI3Segment facebookDataDictionaryXri = facebookDataDictionaryContextNode.getXri();
 
 		// convert
