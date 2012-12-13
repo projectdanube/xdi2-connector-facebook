@@ -197,18 +197,20 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userXri: " + userXri + ", facebookDataXri: " + facebookDataXri);
 
+			// parse identifiers
+
+			String facebookObjectIdentifier = FacebookContributor.this.facebookMapping.facebookDataXriToFacebookObjectIdentifier(facebookDataXri);
+			String facebookFieldIdentifier = FacebookContributor.this.facebookMapping.facebookDataXriToFacebookFieldIdentifier(facebookDataXri);
+			if (facebookObjectIdentifier == null) return false;
+			if (facebookFieldIdentifier == null) return false;
+
+			log.debug("facebookObjectIdentifier: " + facebookObjectIdentifier + ", facebookFieldIdentifier: " + facebookFieldIdentifier);
+			
 			// retrieve the Facebook value
 
 			String facebookValue = null;
 
 			try {
-
-				String facebookObjectIdentifier = FacebookContributor.this.facebookMapping.facebookDataXriToFacebookObjectIdentifier(facebookDataXri);
-				String facebookFieldIdentifier = FacebookContributor.this.facebookMapping.facebookDataXriToFacebookFieldIdentifier(facebookDataXri);
-				if (facebookObjectIdentifier == null) return false;
-				if (facebookFieldIdentifier == null) return false;
-
-				log.debug("facebookObjectIdentifier: " + facebookObjectIdentifier + ", facebookFieldIdentifier: " + facebookFieldIdentifier);
 
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
 				if (accessToken == null) throw new Exception("No access token.");
