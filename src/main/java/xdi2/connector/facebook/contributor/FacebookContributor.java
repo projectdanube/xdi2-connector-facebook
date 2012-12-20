@@ -12,7 +12,7 @@ import xdi2.connector.facebook.mapping.FacebookMapping;
 import xdi2.connector.facebook.util.GraphUtil;
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
-import xdi2.core.features.dictionary.Dictionary;
+import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.xri3.impl.XDI3Segment;
 import xdi2.messaging.GetOperation;
 import xdi2.messaging.MessageEnvelope;
@@ -171,7 +171,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 				ContextNode facebookUserContextNode = messageResult.getGraph().findContextNode(new XDI3Segment("" + facebookContextXri + facebookUserXri), true);
 				ContextNode userContextNode = messageResult.getGraph().findContextNode(new XDI3Segment("" + facebookContextXri + userXri), true);
 
-				Dictionary.setCanonicalContextNode(facebookUserContextNode, userContextNode);
+				Equivalence.setReferenceContextNode(facebookUserContextNode, userContextNode);
 			}
 
 			// done

@@ -7,6 +7,7 @@ import xdi2.core.ContextNode;
 import xdi2.core.Graph;
 import xdi2.core.exceptions.Xdi2RuntimeException;
 import xdi2.core.features.dictionary.Dictionary;
+import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.features.multiplicity.Multiplicity;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.io.XDIReaderRegistry;
@@ -103,7 +104,7 @@ public class FacebookMapping {
 		ContextNode facebookDataDictionaryContextNode = this.mappingGraph.findContextNode(facebookDataDictionaryXri, false);
 		if (facebookDataDictionaryContextNode == null) return null;
 
-		ContextNode xdiDataDictionaryContextNode = Dictionary.getCanonicalContextNode(facebookDataDictionaryContextNode);
+		ContextNode xdiDataDictionaryContextNode = Equivalence.getReferenceContextNode(facebookDataDictionaryContextNode);
 		XDI3Segment xdiDataDictionaryXri = xdiDataDictionaryContextNode.getXri();
 
 		// convert
@@ -153,7 +154,7 @@ public class FacebookMapping {
 		ContextNode xdiDataDictionaryContextNode = this.mappingGraph.findContextNode(xdiDataDictionaryXri, false);
 		if (xdiDataDictionaryContextNode == null) return null;
 
-		ContextNode facebookDataDictionaryContextNode = Dictionary.getEquivalenceContextNodes(xdiDataDictionaryContextNode).next();
+		ContextNode facebookDataDictionaryContextNode = Equivalence.getIncomingReferenceAndPrivateReferenceContextNodes(xdiDataDictionaryContextNode).next();
 		XDI3Segment facebookDataDictionaryXri = facebookDataDictionaryContextNode.getXri();
 
 		// convert
