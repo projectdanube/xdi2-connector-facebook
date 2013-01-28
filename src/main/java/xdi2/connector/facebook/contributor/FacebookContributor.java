@@ -166,10 +166,10 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			if (facebookUserId != null) {
 
-				XDI3Segment facebookUserXri = new XDI3Segment("!" + facebookUserId);
+				XDI3Segment facebookUserXri = XDI3Segment.create("!" + facebookUserId);
 
-				ContextNode facebookUserContextNode = messageResult.getGraph().findContextNode(new XDI3Segment("" + facebookContextXri + facebookUserXri), true);
-				ContextNode userContextNode = messageResult.getGraph().findContextNode(new XDI3Segment("" + facebookContextXri + userXri), true);
+				ContextNode facebookUserContextNode = messageResult.getGraph().findContextNode(XDI3Segment.create("" + facebookContextXri + facebookUserXri), true);
+				ContextNode userContextNode = messageResult.getGraph().findContextNode(XDI3Segment.create("" + facebookContextXri + userXri), true);
 
 				Equivalence.setReferenceContextNode(facebookUserContextNode, userContextNode);
 			}

@@ -19,6 +19,19 @@
 		</property>
 	</bean>
 
+	<!-- SPRING -->
+
+	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="xdi2.server.spring.StringXDI3SubSegmentConverter" />
+				<bean class="xdi2.server.spring.StringXDI3SegmentConverter" />
+				<bean class="xdi2.server.spring.StringXDI3StatementConverter" />
+				<bean class="xdi2.server.spring.StringXDI3XRefConverter" />
+			</list>
+		</property>
+	</bean>
+
 	<!-- FACEBOOK CONNECTOR SERVLET -->
 
 	<bean id="ConnectServlet" class="xdi2.connector.facebook.ConnectServlet" init-method="init" destroy-method="destroy">

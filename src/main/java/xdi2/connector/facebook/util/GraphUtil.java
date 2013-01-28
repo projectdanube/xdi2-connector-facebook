@@ -13,7 +13,7 @@ public class GraphUtil {
 
 	public static String retrieveAccessToken(Graph graph, XDI3Segment userXri) {
 
-		XDI3Segment contextNodeXri = new XDI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
+		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
 
 		ContextNode contextNode = graph.findContextNode(contextNodeXri, false);
 		if (contextNode == null) return null;
@@ -26,7 +26,7 @@ public class GraphUtil {
 
 	public static void storeAccessToken(Graph graph, XDI3Segment userXri, String accessToken) {
 
-		XDI3Segment contextNodeXri = new XDI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
+		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
 
 		ContextNode contextNode = graph.findContextNode(contextNodeXri, true);
 
@@ -38,7 +38,7 @@ public class GraphUtil {
 
 	public static void removeAccessToken(Graph graph, XDI3Segment userXri) {
 
-		XDI3Segment contextNodeXri = new XDI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
+		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
 
 		ContextNode contextNode = graph.findContextNode(contextNodeXri, false);
 		if (contextNode == null) return;

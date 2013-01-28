@@ -15,7 +15,7 @@ import xdi2.core.xri3.impl.XDI3Segment;
 
 public class FacebookMapping {
 
-	public static final XDI3Segment XRI_S_FACEBOOK_CONTEXT = new XDI3Segment("+(https://facebook.com/)");
+	public static final XDI3Segment XRI_S_FACEBOOK_CONTEXT = XDI3Segment.create("+(https://facebook.com/)");
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookMapping.class);
 
@@ -100,7 +100,7 @@ public class FacebookMapping {
 
 		// map
 
-		XDI3Segment facebookDataDictionaryXri = new XDI3Segment("" + XRI_S_FACEBOOK_CONTEXT + buffer1.toString());
+		XDI3Segment facebookDataDictionaryXri = XDI3Segment.create("" + XRI_S_FACEBOOK_CONTEXT + buffer1.toString());
 		ContextNode facebookDataDictionaryContextNode = this.mappingGraph.findContextNode(facebookDataDictionaryXri, false);
 		if (facebookDataDictionaryContextNode == null) return null;
 
@@ -122,7 +122,7 @@ public class FacebookMapping {
 			}
 		}
 
-		XDI3Segment xdiDataXri = new XDI3Segment(buffer2.toString());
+		XDI3Segment xdiDataXri = XDI3Segment.create(buffer2.toString());
 
 		// done
 
@@ -150,7 +150,7 @@ public class FacebookMapping {
 
 		// map
 
-		XDI3Segment xdiDataDictionaryXri = new XDI3Segment(buffer1.toString());
+		XDI3Segment xdiDataDictionaryXri = XDI3Segment.create(buffer1.toString());
 		ContextNode xdiDataDictionaryContextNode = this.mappingGraph.findContextNode(xdiDataDictionaryXri, false);
 		if (xdiDataDictionaryContextNode == null) return null;
 
@@ -172,7 +172,7 @@ public class FacebookMapping {
 			}
 		}
 
-		XDI3Segment facebookDataXri = new XDI3Segment(buffer2.toString());
+		XDI3Segment facebookDataXri = XDI3Segment.create(buffer2.toString());
 
 		// done
 

@@ -96,7 +96,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 		if ("Request Access Token!".equals(request.getParameter("submit"))) {
 
-			XDI3Segment userXri = new XDI3Segment(request.getParameter("userXri"));
+			XDI3Segment userXri = XDI3Segment.create(request.getParameter("userXri"));
 			request.getSession().setAttribute("userXri", userXri);
 
 			try {
@@ -113,7 +113,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 		if ("Revoke Access Token!".equals(request.getParameter("submit"))) {
 
-			XDI3Segment userXri = new XDI3Segment(request.getParameter("userXri"));
+			XDI3Segment userXri = XDI3Segment.create(request.getParameter("userXri"));
 			request.getSession().setAttribute("userXri", userXri);
 
 			try {
