@@ -79,7 +79,7 @@
 					<property name="bootstrapLinkContract" value="true" />
 				</bean>
 				<bean class="xdi2.messaging.target.interceptor.impl.VariablesInterceptor" />
-				<bean class="xdi2.messaging.target.interceptor.impl.DollarIsInterceptor" />
+				<bean class="xdi2.messaging.target.interceptor.impl.RefInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.CheckOwnerInterceptor" />
 				<ref bean="facebookContributor" />
 			</util:list>
