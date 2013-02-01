@@ -4,7 +4,7 @@ import xdi2.connector.facebook.mapping.FacebookMapping;
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
 import xdi2.core.Literal;
-import xdi2.core.xri3.impl.XDI3Segment;
+import xdi2.core.xri3.XDI3Segment;
 import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class GraphUtil {

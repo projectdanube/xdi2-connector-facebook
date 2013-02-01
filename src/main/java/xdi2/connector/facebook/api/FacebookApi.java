@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xdi2.core.xri3.impl.XDI3Segment;
+import xdi2.core.xri3.XDI3Segment;
 
 public class FacebookApi {
 

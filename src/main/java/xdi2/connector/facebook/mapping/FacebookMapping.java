@@ -11,7 +11,7 @@ import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.features.multiplicity.Multiplicity;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.io.XDIReaderRegistry;
-import xdi2.core.xri3.impl.XDI3Segment;
+import xdi2.core.xri3.XDI3Segment;
 
 public class FacebookMapping {
 
