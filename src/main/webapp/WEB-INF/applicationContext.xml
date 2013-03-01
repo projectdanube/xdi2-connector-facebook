@@ -79,7 +79,7 @@
 				</bean>
 				<bean class="xdi2.messaging.target.interceptor.impl.VariablesInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.RefInterceptor" />
-				<bean class="xdi2.messaging.target.interceptor.impl.CheckOwnerInterceptor" />
+				<bean class="xdi2.messaging.target.interceptor.impl.ToInterceptor" />
 				<ref bean="facebookContributor" />
 			</util:list>
 		</property>
