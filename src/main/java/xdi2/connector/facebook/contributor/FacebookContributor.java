@@ -13,6 +13,8 @@ import xdi2.connector.facebook.util.GraphUtil;
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
 import xdi2.core.features.equivalence.Equivalence;
+import xdi2.core.features.nodetypes.XdiAbstractSubGraph;
+import xdi2.core.features.nodetypes.XdiAttribute;
 import xdi2.core.features.nodetypes.XdiAttributeSingleton;
 import xdi2.core.xri3.XDI3Segment;
 import xdi2.messaging.GetOperation;
@@ -230,8 +232,8 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			if (facebookValue != null) {
 
-				ContextNode contextNode = messageResult.getGraph().findContextNode(contextNodeXri, true);
-				contextNode.createLiteral(facebookValue);
+				XdiAttribute xdiAttribute = (XdiAttribute) XdiAbstractSubGraph.fromContextNode(messageResult.getGraph().findContextNode(contextNodeXri, true));
+				xdiAttribute.getXdiValue(true).getContextNode().createLiteral(facebookValue);
 			}
 
 			// done
