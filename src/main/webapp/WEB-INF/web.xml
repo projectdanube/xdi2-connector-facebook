@@ -20,12 +20,12 @@
 		<servlet-name>ConnectServlet</servlet-name>
 		<url-pattern>/connect</url-pattern>
 	</servlet-mapping>
-
+	
 	<!-- XDI SERVLET -->
 
 	<servlet>
 		<servlet-name>EndpointServlet</servlet-name>
-		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+		<servlet-class>xdi2.server.servlet.EndpointServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -34,7 +34,7 @@
 		<url-pattern>/xdi/</url-pattern>
 	</servlet-mapping>
 
-	<!-- SPRING -->
+	<!-- LISTENERS -->
 
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

@@ -13,6 +13,7 @@ import xdi2.connector.facebook.util.GraphUtil;
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
 import xdi2.core.features.equivalence.Equivalence;
+import xdi2.core.features.nodetypes.XdiAttributeSingleton;
 import xdi2.core.xri3.XDI3Segment;
 import xdi2.messaging.GetOperation;
 import xdi2.messaging.MessageEnvelope;
@@ -27,7 +28,7 @@ import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
 import xdi2.messaging.target.interceptor.MessageEnvelopeInterceptor;
 import xdi2.messaging.target.interceptor.MessagingTargetInterceptor;
 
-@ContributorXri(addresses={"+(https://facebook.com)/"})
+@ContributorXri(addresses={"(https://facebook.com)/"})
 public class FacebookContributor extends AbstractContributor implements MessagingTargetInterceptor, MessageEnvelopeInterceptor, Prototype<FacebookContributor> {
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookContributor.class);
@@ -112,19 +113,19 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	 * Sub-Contributors
 	 */
 
-	@ContributorXri(addresses={"$!(+enabled)"})
+	@ContributorXri(addresses={"+|&enabled"})
 	private class FacebookEnabledContributor extends AbstractContributor {
 
 		@Override
 		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-			messageResult.getGraph().findContextNode(contextNodeXri, true).createLiteral("1");
+			XdiAttributeSingleton.fromContextNode(messageResult.getGraph().findContextNode(contextNodeXri, true)).getXdiValue(true).getContextNode().createLiteral("1");
 
 			return true;
 		}
 	}
 
-	@ContributorXri(addresses={"($$!)"})
+	@ContributorXri(addresses={"{{=@*!}}"})
 	private class FacebookUserContributor extends AbstractContributor {
 
 		private FacebookUserContributor() {
@@ -180,7 +181,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 	}
 
-	@ContributorXri(addresses={"+(user)($)"})
+	@ContributorXri(addresses={"+|(user){+}"})
 	private class FacebookUserFieldContributor extends AbstractContributor {
 
 		private FacebookUserFieldContributor() {
