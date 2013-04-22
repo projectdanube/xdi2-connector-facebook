@@ -1,4 +1,4 @@
-package xdi2.connector.facebook;
+package xdi2.connector.facebook.connect;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -174,7 +174,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 		request.setAttribute("input", sampleInput);
 		request.setAttribute("endpoint", request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/")) + sampleEndpoint);
 
-		request.getRequestDispatcher("/FacebookConnector.jsp").forward(request, response);
+		request.getRequestDispatcher("/Connect.jsp").forward(request, response);
 	}
 
 	@Override
@@ -266,7 +266,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 		request.setAttribute("stats", stats);
 		request.setAttribute("error", error);
 
-		request.getRequestDispatcher("/FacebookConnector.jsp").forward(request, response);
+		request.getRequestDispatcher("/Connect.jsp").forward(request, response);
 	}
 
 	public Graph getGraph() {

@@ -15,11 +15,12 @@ import xdi2.core.Graph;
 import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.features.nodetypes.XdiAbstractSubGraph;
 import xdi2.core.features.nodetypes.XdiAttribute;
-import xdi2.core.features.nodetypes.XdiAttributeSingleton;
+import xdi2.core.util.XDI3Util;
 import xdi2.core.xri3.XDI3Segment;
 import xdi2.messaging.GetOperation;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
+import xdi2.messaging.ModOperation;
 import xdi2.messaging.exceptions.Xdi2MessagingException;
 import xdi2.messaging.target.ExecutionContext;
 import xdi2.messaging.target.MessagingTarget;
@@ -35,6 +36,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookContributor.class);
 
+	private boolean enabled;
 	private Graph tokenGraph;
 	private FacebookApi facebookApi;
 	private FacebookMapping facebookMapping;
@@ -42,6 +44,8 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	public FacebookContributor() {
 
 		super();
+
+		this.enabled = true;
 
 		this.getContributors().addContributor(new FacebookEnabledContributor());
 		this.getContributors().addContributor(new FacebookUserContributor());
@@ -115,13 +119,29 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	 * Sub-Contributors
 	 */
 
-	@ContributorXri(addresses={"+|&enabled"})
+	@ContributorXri(addresses={"<+enabled>&"})
 	private class FacebookEnabledContributor extends AbstractContributor {
 
 		@Override
 		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-			XdiAttributeSingleton.fromContextNode(messageResult.getGraph().findContextNode(contextNodeXri, true)).getXdiValue(true).getContextNode().createLiteral("1");
+			if (relativeContextNodeXri != null) contextNodeXri = XDI3Util.parentXri(contextNodeXri, - relativeContextNodeXri.getNumSubSegments());
+
+			if (FacebookContributor.this.isEnabled())
+				messageResult.getGraph().setDeepLiteral(contextNodeXri, "1");
+			else
+				messageResult.getGraph().setDeepLiteral(contextNodeXri, "0");
+
+			return true;
+		}
+
+		@Override
+		public boolean modLiteral(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, String literalData, ModOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+
+			if ("1".equals(literalData))
+				FacebookContributor.this.setEnabled(true);
+			else
+				FacebookContributor.this.setEnabled(false);
 
 			return true;
 		}
@@ -139,6 +159,8 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 		@Override
 		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+
+			if (! FacebookContributor.this.isEnabled()) return false;
 
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 2];
 			XDI3Segment userXri = contributorXris[contributorXris.length - 1];
@@ -171,8 +193,8 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 				XDI3Segment facebookUserXri = XDI3Segment.create("!" + facebookUserId);
 
-				ContextNode facebookUserContextNode = messageResult.getGraph().findContextNode(XDI3Segment.create("" + facebookContextXri + facebookUserXri), true);
-				ContextNode userContextNode = messageResult.getGraph().findContextNode(XDI3Segment.create("" + facebookContextXri + userXri), true);
+				ContextNode facebookUserContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + facebookUserXri));
+				ContextNode userContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + userXri));
 
 				Equivalence.setReferenceContextNode(facebookUserContextNode, userContextNode);
 			}
@@ -183,7 +205,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 	}
 
-	@ContributorXri(addresses={"+|(user){+}"})
+	@ContributorXri(addresses={"+(user){+}"})
 	private class FacebookUserFieldContributor extends AbstractContributor {
 
 		private FacebookUserFieldContributor() {
@@ -193,6 +215,8 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 		@Override
 		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+
+			if (! FacebookContributor.this.isEnabled()) return false;
 
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
 			XDI3Segment userXri = contributorXris[contributorXris.length - 2];
@@ -208,7 +232,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 			if (facebookFieldIdentifier == null) return false;
 
 			log.debug("facebookObjectIdentifier: " + facebookObjectIdentifier + ", facebookFieldIdentifier: " + facebookFieldIdentifier);
-			
+
 			// retrieve the Facebook value
 
 			String facebookValue = null;
@@ -232,8 +256,8 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			if (facebookValue != null) {
 
-				XdiAttribute xdiAttribute = (XdiAttribute) XdiAbstractSubGraph.fromContextNode(messageResult.getGraph().findContextNode(contextNodeXri, true));
-				xdiAttribute.getXdiValue(true).getContextNode().createLiteral(facebookValue);
+				XdiAttribute xdiAttribute = (XdiAttribute) XdiAbstractSubGraph.fromContextNode(messageResult.getGraph().setDeepContextNode(contextNodeXri));
+				xdiAttribute.getXdiValue(true).getContextNode().setLiteral(facebookValue);
 			}
 
 			// done
@@ -262,6 +286,16 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	/*
 	 * Getters and setters
 	 */
+
+	public boolean isEnabled() {
+
+		return this.enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+
+		this.enabled = enabled;
+	}
 
 	public Graph getTokenGraph() {
 

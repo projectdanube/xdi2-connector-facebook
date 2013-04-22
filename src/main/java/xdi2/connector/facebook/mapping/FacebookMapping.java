@@ -9,8 +9,6 @@ import xdi2.core.exceptions.Xdi2RuntimeException;
 import xdi2.core.features.dictionary.Dictionary;
 import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.features.nodetypes.XdiAbstractSubGraph;
-import xdi2.core.features.nodetypes.XdiAttributeSingleton;
-import xdi2.core.features.nodetypes.XdiEntitySingleton;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.io.XDIReaderRegistry;
 import xdi2.core.xri3.XDI3Segment;
@@ -97,13 +95,13 @@ public class FacebookMapping {
 
 		for (int i=0; i<facebookDataXri.getNumSubSegments(); i++) {
 
-			buffer1.append(Dictionary.instanceXriToDictionaryXri(XdiAbstractSubGraph.getBaseArcXri(facebookDataXri.getSubSegment(i))));
+			buffer1.append(Dictionary.instanceXriToDictionaryXri(facebookDataXri.getSubSegment(i)));
 		}
 
 		// map
 
 		XDI3Segment facebookDataDictionaryXri = XDI3Segment.create("" + XRI_S_FACEBOOK_CONTEXT + buffer1.toString());
-		ContextNode facebookDataDictionaryContextNode = this.mappingGraph.findContextNode(facebookDataDictionaryXri, false);
+		ContextNode facebookDataDictionaryContextNode = this.mappingGraph.getDeepContextNode(facebookDataDictionaryXri);
 		if (facebookDataDictionaryContextNode == null) return null;
 
 		ContextNode xdiDataDictionaryContextNode = Equivalence.getReferenceContextNode(facebookDataDictionaryContextNode);
@@ -115,13 +113,7 @@ public class FacebookMapping {
 
 		for (int i=0; i<xdiDataDictionaryXri.getNumSubSegments(); i++) {
 
-			if (i + 1 < xdiDataDictionaryXri.getNumSubSegments()) {
-
-				buffer2.append(XdiEntitySingleton.createArcXri(Dictionary.dictionaryXriToInstanceXri(xdiDataDictionaryXri.getSubSegment(i))));
-			} else {
-
-				buffer2.append(XdiAttributeSingleton.createArcXri(Dictionary.dictionaryXriToInstanceXri(xdiDataDictionaryXri.getSubSegment(i))));
-			}
+			buffer2.append(Dictionary.dictionaryXriToInstanceXri(xdiDataDictionaryXri.getSubSegment(i)));
 		}
 
 		XDI3Segment xdiDataXri = XDI3Segment.create(buffer2.toString());
@@ -147,13 +139,13 @@ public class FacebookMapping {
 
 		for (int i=0; i<xdiDataXri.getNumSubSegments(); i++) {
 
-			buffer1.append(Dictionary.instanceXriToDictionaryXri(XdiAbstractSubGraph.getBaseArcXri(xdiDataXri.getSubSegment(i))));
+			buffer1.append(Dictionary.instanceXriToDictionaryXri(xdiDataXri.getSubSegment(i)));
 		}
 
 		// map
 
 		XDI3Segment xdiDataDictionaryXri = XDI3Segment.create(buffer1.toString());
-		ContextNode xdiDataDictionaryContextNode = this.mappingGraph.findContextNode(xdiDataDictionaryXri, false);
+		ContextNode xdiDataDictionaryContextNode = this.mappingGraph.getDeepContextNode(xdiDataDictionaryXri);
 		if (xdiDataDictionaryContextNode == null) return null;
 
 		ContextNode facebookDataDictionaryContextNode = Equivalence.getIncomingReferenceContextNodes(xdiDataDictionaryContextNode).next();
@@ -165,13 +157,7 @@ public class FacebookMapping {
 
 		for (int i=1; i<facebookDataDictionaryXri.getNumSubSegments(); i++) {
 
-			if (i + 1 < facebookDataDictionaryXri.getNumSubSegments()) {
-
-				buffer2.append(XdiEntitySingleton.createArcXri(Dictionary.dictionaryXriToInstanceXri(facebookDataDictionaryXri.getSubSegment(i))));
-			} else {
-
-				buffer2.append(XdiAttributeSingleton.createArcXri(Dictionary.dictionaryXriToInstanceXri(facebookDataDictionaryXri.getSubSegment(i))));
-			}
+			buffer2.append(Dictionary.dictionaryXriToInstanceXri(facebookDataDictionaryXri.getSubSegment(i)));
 		}
 
 		XDI3Segment facebookDataXri = XDI3Segment.create(buffer2.toString());

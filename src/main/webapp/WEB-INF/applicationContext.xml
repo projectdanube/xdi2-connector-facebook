@@ -29,9 +29,9 @@
 		</property>
 	</bean>
 
-	<!-- FACEBOOK CONNECTOR SERVLET -->
+	<!-- WEB SERVLET -->
 
-	<bean id="ConnectServlet" class="xdi2.connector.facebook.ConnectServlet" init-method="init" destroy-method="destroy">
+	<bean id="ConnectServlet" class="xdi2.connector.facebook.connect.ConnectServlet" init-method="init" destroy-method="destroy">
 		<property name="graph" ref="graph1" />
 		<property name="facebookApi" ref="facebookApi" />
 	</bean>
@@ -70,7 +70,7 @@
 		<property name="interceptors">
 			<util:list>
 				<bean class="xdi2.messaging.target.interceptor.impl.BootstrapInterceptor">
-					<property name="bootstrapOwner" value="=!1111" />
+					<property name="bootstrapOwner" value="[=]!1111" />
 					<property name="bootstrapSharedSecret" value="s3cret" />
 					<property name="bootstrapLinkContract" value="true" />
 				</bean>

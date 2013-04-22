@@ -38,7 +38,7 @@
 	<tr>
 	
 	<td><img src="images/oauth2-logo.png" align="middle" style="float:left;padding-right:10px;"></td>
-	<td>I-Number: <input type="text" name="userXri" value="=!1111"></td>
+	<td>I-Number: <input type="text" name="userXri" value="[=]!1111"></td>
 	<td><input type="submit" name="submit" value="Request Access Token!"></td>
 	<td><input type="submit" name="submit" value="Revoke Access Token!"></td>
 

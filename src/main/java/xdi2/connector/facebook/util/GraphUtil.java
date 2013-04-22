@@ -15,32 +15,23 @@ public class GraphUtil {
 
 		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIPolicyConstants.XRI_S_OAUTH_TOKEN);
 
-		ContextNode contextNode = graph.findContextNode(contextNodeXri, false);
-		if (contextNode == null) return null;
+		Literal literal = graph.getDeepLiteral(contextNodeXri);
 
-		Literal literal = contextNode.getLiteral();
-		if (literal == null) return null;
-
-		return literal.getLiteralData();
+		return literal == null ? null : literal.getLiteralData();
 	}
 
 	public static void storeAccessToken(Graph graph, XDI3Segment userXri, String accessToken) {
 
 		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIPolicyConstants.XRI_S_OAUTH_TOKEN);
 
-		ContextNode contextNode = graph.findContextNode(contextNodeXri, true);
-
-		if (contextNode.containsLiteral())
-			contextNode.getLiteral().setLiteralData(accessToken);
-		else
-			contextNode.createLiteral(accessToken);
+		graph.setDeepLiteral(contextNodeXri, accessToken);
 	}
 
 	public static void removeAccessToken(Graph graph, XDI3Segment userXri) {
 
 		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIPolicyConstants.XRI_S_OAUTH_TOKEN);
 
-		ContextNode contextNode = graph.findContextNode(contextNodeXri, false);
+		ContextNode contextNode = graph.getDeepContextNode(contextNodeXri);
 		if (contextNode == null) return;
 
 		contextNode.delete();
