@@ -182,7 +182,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
 				if (accessToken == null) throw new Exception("No access token.");
 
-				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken, "id");
+				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
 				if (user == null) throw new Exception("No user.");
 
 				facebookUserId = user.getString("id");
@@ -195,12 +195,12 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			if (facebookUserId != null) {
 
-				XDI3Segment facebookUserXri = XDI3Segment.create("!" + facebookUserId);
+				XDI3Segment facebookUserXri = XDI3Segment.create("[!]!" + facebookUserId);
 
 				ContextNode facebookUserContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + facebookUserXri));
 				ContextNode userContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + userXri));
 
-				Equivalence.setReferenceContextNode(facebookUserContextNode, userContextNode);
+				Equivalence.addIdentityContextNode(userContextNode, facebookUserContextNode);
 			}
 
 			// done
@@ -209,7 +209,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 	}
 
-	@ContributorXri(addresses={"+(user)[+friend]"})
+	@ContributorXri(addresses={"+(user)[+(friend)]"})
 	private class FacebookUserFriendsContributor extends AbstractContributor {
 
 		private FacebookUserFriendsContributor() {
@@ -237,7 +237,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
 				if (accessToken == null) throw new Exception("No access token.");
 
-				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken, "friends");
+				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
 				if (user == null) throw new Exception("No user.");
 				if (! user.has("friends")) return false;
 
@@ -269,11 +269,11 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 						throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);
 					}
 
-					XDI3Segment facebookFriendXri = XDI3Segment.create("!" + facebookFriendId);
+					XDI3Segment facebookFriendXri = XDI3Segment.create("[!]!" + facebookFriendId);
 					ContextNode facebookFriendContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + facebookFriendXri));
 					facebookFriendContextNode.setDeepContextNode(XDI3Segment.create("<+name>&")).setLiteral(facebookFriendName);
 
-					XdiEntityInstanceOrdered friendXdiEntityInstanceOrdered = friendXdiEntityClass.getXdiInstanceOrdered(-1);
+					XdiEntityInstanceOrdered friendXdiEntityInstanceOrdered = friendXdiEntityClass.setXdiInstanceOrdered(-1);
 
 					Equivalence.addIdentityContextNode(friendXdiEntityInstanceOrdered.getContextNode(), facebookFriendContextNode);
 				}
@@ -322,7 +322,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
 				if (accessToken == null) throw new Exception("No access token.");
 
-				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken, facebookFieldIdentifier);
+				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
 				if (user == null) throw new Exception("No user.");
 				if (! user.has(facebookFieldIdentifier)) return false;
 
@@ -350,13 +350,16 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	 * Helper methods
 	 */
 
-	private JSONObject retrieveUser(ExecutionContext executionContext, String accessToken, String fields) throws IOException, JSONException {
+	private JSONObject retrieveUser(ExecutionContext executionContext, String accessToken) throws IOException, JSONException {
 
 		JSONObject user = FacebookContributorExecutionContext.getUser(executionContext, accessToken);
 
 		if (user == null) {
 
-			user = this.facebookApi.getUser(accessToken, fields);
+			user = this.facebookApi.getUser(accessToken, null);
+			JSONObject userFriends = this.facebookApi.getUser(accessToken, "friends");
+			user.put("friends", userFriends.getJSONObject("friends"));
+
 			FacebookContributorExecutionContext.putUser(executionContext, accessToken, user);
 		}
 

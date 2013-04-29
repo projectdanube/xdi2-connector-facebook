@@ -175,7 +175,7 @@ public class FacebookApi {
 
 		StringBuffer location = new StringBuffer("https://graph.facebook.com/me?");
 		location.append("access_token=" + accessToken);
-		if (fields != null) location.append("fields=" + fields);
+		if (fields != null) location.append("&fields=" + fields);
 
 		HttpGet httpGet = new HttpGet(URI.create(location.toString()));
 		HttpResponse httpResponse = this.httpClient.execute(httpGet);
