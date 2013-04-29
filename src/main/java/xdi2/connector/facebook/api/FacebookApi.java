@@ -165,7 +165,7 @@ public class FacebookApi {
 		log.debug("Access token revoked.");
 	}
 
-	public JSONObject getUser(String accessToken) throws IOException, JSONException {
+	public JSONObject getUser(String accessToken, String fields) throws IOException, JSONException {
 
 		if (accessToken == null) throw new NullPointerException();
 
@@ -175,6 +175,7 @@ public class FacebookApi {
 
 		StringBuffer location = new StringBuffer("https://graph.facebook.com/me?");
 		location.append("access_token=" + accessToken);
+		if (fields != null) location.append("fields=" + fields);
 
 		HttpGet httpGet = new HttpGet(URI.create(location.toString()));
 		HttpResponse httpResponse = this.httpClient.execute(httpGet);

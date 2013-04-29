@@ -2,6 +2,7 @@ package xdi2.connector.facebook.contributor;
 
 import java.io.IOException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -13,8 +14,10 @@ import xdi2.connector.facebook.util.GraphUtil;
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
 import xdi2.core.features.equivalence.Equivalence;
-import xdi2.core.features.nodetypes.XdiAbstractSubGraph;
-import xdi2.core.features.nodetypes.XdiAttribute;
+import xdi2.core.features.nodetypes.XdiAbstractAttribute;
+import xdi2.core.features.nodetypes.XdiAttributeSingleton;
+import xdi2.core.features.nodetypes.XdiEntityClass;
+import xdi2.core.features.nodetypes.XdiEntityInstanceOrdered;
 import xdi2.core.util.XDI3Util;
 import xdi2.core.xri3.XDI3Segment;
 import xdi2.messaging.GetOperation;
@@ -154,6 +157,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			super();
 
+			this.getContributors().addContributor(new FacebookUserFriendsContributor());
 			this.getContributors().addContributor(new FacebookUserFieldContributor());
 		}
 
@@ -178,7 +182,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
 				if (accessToken == null) throw new Exception("No access token.");
 
-				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
+				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken, "id");
 				if (user == null) throw new Exception("No user.");
 
 				facebookUserId = user.getString("id");
@@ -197,6 +201,82 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 				ContextNode userContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + userXri));
 
 				Equivalence.setReferenceContextNode(facebookUserContextNode, userContextNode);
+			}
+
+			// done
+
+			return true;
+		}
+	}
+
+	@ContributorXri(addresses={"+(user)[+friend]"})
+	private class FacebookUserFriendsContributor extends AbstractContributor {
+
+		private FacebookUserFriendsContributor() {
+
+			super();
+		}
+
+		@Override
+		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+
+			if (! FacebookContributor.this.isEnabled()) return false;
+
+			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
+			XDI3Segment userXri = contributorXris[contributorXris.length - 2];
+			XDI3Segment facebookDataXri = contributorXris[contributorXris.length - 1];
+
+			log.debug("facebookContextXri: " + facebookContextXri + ", userXri: " + userXri + ", facebookDataXri: " + facebookDataXri);
+
+			// retrieve the Facebook friends
+
+			JSONArray facebookFriends = null;
+
+			try {
+
+				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
+				if (accessToken == null) throw new Exception("No access token.");
+
+				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken, "friends");
+				if (user == null) throw new Exception("No user.");
+				if (! user.has("friends")) return false;
+
+				facebookFriends = user.getJSONObject("friends").getJSONArray("data");
+			} catch (Exception ex) {
+
+				throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);
+			}
+
+			// add the Facebook friends to the response
+
+			if (facebookFriends != null) {
+
+				XdiEntityClass friendXdiEntityClass = XdiEntityClass.fromContextNode(messageResult.getGraph().setDeepContextNode(contextNodeXri));
+
+				for (int i=0; i<facebookFriends.length(); i++) {
+
+					JSONObject facebookFriend;
+					String facebookFriendName;
+					String facebookFriendId; 
+
+					try {
+
+						facebookFriend = facebookFriends.getJSONObject(i);
+						facebookFriendId = facebookFriend.getString("id");
+						facebookFriendName = facebookFriend.getString("name");
+					} catch (JSONException ex) {
+
+						throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);
+					}
+
+					XDI3Segment facebookFriendXri = XDI3Segment.create("!" + facebookFriendId);
+					ContextNode facebookFriendContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + facebookFriendXri));
+					facebookFriendContextNode.setDeepContextNode(XDI3Segment.create("<+name>&")).setLiteral(facebookFriendName);
+
+					XdiEntityInstanceOrdered friendXdiEntityInstanceOrdered = friendXdiEntityClass.getXdiInstanceOrdered(-1);
+
+					Equivalence.addIdentityContextNode(friendXdiEntityInstanceOrdered.getContextNode(), facebookFriendContextNode);
+				}
 			}
 
 			// done
@@ -233,31 +313,31 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			log.debug("facebookObjectIdentifier: " + facebookObjectIdentifier + ", facebookFieldIdentifier: " + facebookFieldIdentifier);
 
-			// retrieve the Facebook value
+			// retrieve the Facebook field
 
-			String facebookValue = null;
+			String facebookField = null;
 
 			try {
 
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
 				if (accessToken == null) throw new Exception("No access token.");
 
-				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
+				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken, facebookFieldIdentifier);
 				if (user == null) throw new Exception("No user.");
 				if (! user.has(facebookFieldIdentifier)) return false;
 
-				facebookValue = user.getString(facebookFieldIdentifier);
+				facebookField = user.getString(facebookFieldIdentifier);
 			} catch (Exception ex) {
 
 				throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);
 			}
 
-			// add the Facebook value to the response
+			// add the Facebook field to the response
 
-			if (facebookValue != null) {
+			if (facebookField != null) {
 
-				XdiAttribute xdiAttribute = (XdiAttribute) XdiAbstractSubGraph.fromContextNode(messageResult.getGraph().setDeepContextNode(contextNodeXri));
-				xdiAttribute.getXdiValue(true).getContextNode().setLiteral(facebookValue);
+				XdiAttributeSingleton xdiAttributeSingleton = (XdiAttributeSingleton) XdiAbstractAttribute.fromContextNode(messageResult.getGraph().setDeepContextNode(contextNodeXri));
+				xdiAttributeSingleton.getXdiValue(true).getContextNode().setLiteral(facebookField);
 			}
 
 			// done
@@ -270,13 +350,13 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	 * Helper methods
 	 */
 
-	private JSONObject retrieveUser(ExecutionContext executionContext, String accessToken) throws IOException, JSONException {
+	private JSONObject retrieveUser(ExecutionContext executionContext, String accessToken, String fields) throws IOException, JSONException {
 
 		JSONObject user = FacebookContributorExecutionContext.getUser(executionContext, accessToken);
 
 		if (user == null) {
 
-			user = this.facebookApi.getUser(accessToken);
+			user = this.facebookApi.getUser(accessToken, fields);
 			FacebookContributorExecutionContext.putUser(executionContext, accessToken, user);
 		}
 
