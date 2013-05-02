@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -81,9 +82,9 @@ public class FacebookApi {
 		return location.toString();
 	}
 
-	public void checkState(HttpServletRequest request, XDI3Segment userXri) throws IOException {
+	public void checkState(Map<?, ?> parameterMap, XDI3Segment userXri) throws IOException {
 
-		String state = request.getParameter("state");
+		String state = parameterMap.containsKey("state") ? ((String[]) parameterMap.get("state"))[0] : null;
 
 		if (state == null) {
 			
@@ -96,12 +97,12 @@ public class FacebookApi {
 		log.debug("State OK");
 	}
 
-	public String exchangeCodeForAccessToken(HttpServletRequest request) throws IOException, HttpException {
+	public String exchangeCodeForAccessToken(String requestURL, Map<?, ?> parameterMap) throws IOException, HttpException {
 
 		String clientId = this.getAppId();
 		String clientSecret = this.getAppSecret();
-		String redirectUri = uriWithoutQuery(request.getRequestURL().toString());
-		String code = request.getParameter("code");
+		String redirectUri = uriWithoutQuery(requestURL);
+		String code = parameterMap.containsKey("code") ? ((String[]) parameterMap.get("code"))[0] : null;
 
 		log.debug("Exchanging Code '" + code + "'");
 

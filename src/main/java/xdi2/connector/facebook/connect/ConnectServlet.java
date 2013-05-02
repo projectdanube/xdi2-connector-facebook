@@ -151,9 +151,9 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 			try {
 
-				this.getFacebookApi().checkState(request, userXri);
-				
-				String accessToken = this.getFacebookApi().exchangeCodeForAccessToken(request);
+				this.getFacebookApi().checkState(request.getParameterMap(), userXri);
+
+				String accessToken = this.getFacebookApi().exchangeCodeForAccessToken(request.getRequestURL().toString(), request.getParameterMap());
 				if (accessToken == null) throw new Exception("No access token received.");
 
 				GraphUtil.storeAccessToken(this.getGraph(), userXri, accessToken);
