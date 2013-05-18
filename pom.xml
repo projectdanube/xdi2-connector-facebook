@@ -9,20 +9,20 @@
 	<name>xdi2-connector-facebook</name>
 
 	<issueManagement>
-		<url>https://github.com/peacekeeper/xdi2-connector-facebook/issues</url>
+		<url>https://github.com/projectdanube/xdi2-connector-facebook/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
 
 	<distributionManagement>
 		<site>
 			<id>github-project-site</id>
-			<url>scm:git:ssh://git@github.com/peacekeeper/xdi2-connector-facebook.git:gh-pages</url>
+			<url>scm:git:ssh://git@github.com/projectdanube/xdi2-connector-facebook.git:gh-pages</url>
 		</site>
 	</distributionManagement>
 
 	<scm>
-		<url>https://github.com/peacekeeper/xdi2-connector-facebook</url>
-		<connection>scm:git:git://github.com/peacekeeper/xdi2-connector-facebook.git</connection>
+		<url>https://github.com/projectdanube/xdi2-connector-facebook</url>
+		<connection>scm:git:git://github.com/projectdanube/xdi2-connector-facebook.git</connection>
 		<developerConnection>scm:git:git@github.com:peacekeeper/xdi2-connector-facebook.git</developerConnection>
 	</scm>
 
