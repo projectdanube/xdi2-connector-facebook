@@ -1,5 +1,5 @@
-<a href="http://projectdanube.org/" target="_blank"><img src="http://peacekeeper.github.com/xdi2/images/projectdanube_logo.png" align="right"></a>
-<img src="http://peacekeeper.github.com/xdi2/images/logo64.png"><br>
+<a href="http://projectdanube.org/" target="_blank"><img src="http://projectdanube.github.com/xdi2/images/projectdanube_logo.png" align="right"></a>
+<img src="http://projectdanube.github.com/xdi2/images/logo64.png"><br>
 
 This is a connector module for the [XDI2](http://github.com/projectdanube/xdi2) server.
 
