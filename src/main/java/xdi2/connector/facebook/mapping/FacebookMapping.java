@@ -8,7 +8,7 @@ import xdi2.core.Graph;
 import xdi2.core.exceptions.Xdi2RuntimeException;
 import xdi2.core.features.dictionary.Dictionary;
 import xdi2.core.features.equivalence.Equivalence;
-import xdi2.core.features.nodetypes.XdiAbstractSubGraph;
+import xdi2.core.features.nodetypes.XdiAbstractContext;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.io.XDIReaderRegistry;
 import xdi2.core.xri3.XDI3Segment;
@@ -53,7 +53,7 @@ public class FacebookMapping {
 
 		// convert
 
-		String facebookObjectIdentifier = Dictionary.instanceXriToNativeIdentifier(XdiAbstractSubGraph.getBaseArcXri(facebookDataXri.getSubSegment(0)));
+		String facebookObjectIdentifier = Dictionary.instanceXriToNativeIdentifier(XdiAbstractContext.getBaseArcXri(facebookDataXri.getSubSegment(0)));
 
 		// done
 
@@ -72,7 +72,7 @@ public class FacebookMapping {
 
 		// convert
 
-		String facebookFieldIdentifier = Dictionary.instanceXriToNativeIdentifier(XdiAbstractSubGraph.getBaseArcXri(facebookDataXri.getSubSegment(1)));
+		String facebookFieldIdentifier = Dictionary.instanceXriToNativeIdentifier(XdiAbstractContext.getBaseArcXri(facebookDataXri.getSubSegment(1)));
 
 		// done
 
