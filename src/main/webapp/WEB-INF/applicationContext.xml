@@ -71,12 +71,24 @@
 			<util:list>
 				<bean class="xdi2.messaging.target.interceptor.impl.BootstrapInterceptor">
 					<property name="bootstrapOwner" value="[=]!1111" />
-					<property name="bootstrapSharedSecret" value="s3cret" />
 					<property name="bootstrapLinkContract" value="true" />
+					<property name="bootstrapPublicLinkContract" value="true" />
 				</bean>
 				<bean class="xdi2.messaging.target.interceptor.impl.VariablesInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.RefInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.ToInterceptor" />
+				<bean class="xdi2.messaging.target.interceptor.impl.authentication.secrettoken.AuthenticationSecretTokenInterceptor">
+					<property name="secretTokenAuthenticator">
+						<bean class="xdi2.messaging.target.interceptor.impl.authentication.secrettoken.StaticSecretTokenAuthenticator">
+							<property name="globalSalt" value="00000000-0000-0000-0000-000000000000" />
+							<property name="localSaltAndDigestSecretTokens">
+								<util:map>
+									<entry key="[=]!1111" value="xdi2-digest:00000000-0000-0000-0000-000000000000:a7292f2347aef29a9e4c05d35764019106143a339b6e9bb39faee53103e1d6f55e49213d77d16a326a91bab0fc6885779d04e2e4470125720860cf54f872b3bb" />
+								</util:map>
+							</property>
+						</bean>
+					</property>
+				</bean>
 				<ref bean="facebookContributor" />
 			</util:list>
 		</property>

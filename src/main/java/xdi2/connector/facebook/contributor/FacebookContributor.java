@@ -13,17 +13,17 @@ import xdi2.connector.facebook.mapping.FacebookMapping;
 import xdi2.connector.facebook.util.GraphUtil;
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
+import xdi2.core.constants.XDIConstants;
 import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.features.nodetypes.XdiAbstractAttribute;
 import xdi2.core.features.nodetypes.XdiAttributeSingleton;
 import xdi2.core.features.nodetypes.XdiEntityClass;
 import xdi2.core.features.nodetypes.XdiEntityInstanceOrdered;
-import xdi2.core.util.XDI3Util;
 import xdi2.core.xri3.XDI3Segment;
 import xdi2.messaging.GetOperation;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
-import xdi2.messaging.ModOperation;
+import xdi2.messaging.SetOperation;
 import xdi2.messaging.exceptions.Xdi2MessagingException;
 import xdi2.messaging.target.ExecutionContext;
 import xdi2.messaging.target.MessagingTarget;
@@ -122,31 +122,29 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	 * Sub-Contributors
 	 */
 
-	@ContributorXri(addresses={"<+enabled>&"})
+	@ContributorXri(addresses={"<+enabled>"})
 	private class FacebookEnabledContributor extends AbstractContributor {
 
 		@Override
-		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
-
-			if (relativeContextNodeXri != null) contextNodeXri = XDI3Util.parentXri(contextNodeXri, - relativeContextNodeXri.getNumSubSegments());
+		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			if (FacebookContributor.this.isEnabled())
-				messageResult.getGraph().setDeepLiteral(contextNodeXri, "1");
+				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral("1");
 			else
-				messageResult.getGraph().setDeepLiteral(contextNodeXri, "0");
+				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral("0");
 
-			return true;
+			return false;
 		}
 
 		@Override
-		public boolean modLiteral(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, String literalData, ModOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean setLiteral(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeContextNodeXri, String literalData, SetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			if ("1".equals(literalData))
 				FacebookContributor.this.setEnabled(true);
 			else
 				FacebookContributor.this.setEnabled(false);
 
-			return true;
+			return false;
 		}
 	}
 
@@ -157,12 +155,12 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			super();
 
-			this.getContributors().addContributor(new FacebookUserFriendsContributor());
+			//this.getContributors().addContributor(new FacebookUserFriendsContributor());
 			this.getContributors().addContributor(new FacebookUserFieldContributor());
 		}
 
 		@Override
-		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			if (! FacebookContributor.this.isEnabled()) return false;
 
@@ -171,7 +169,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userXri: " + userXri);
 
-			if (relativeContextNodeXri != null) return false;
+			if (userXri.equals("{{=@*!}}")) return false;
 
 			// retrieve the Facebook user ID
 
@@ -198,14 +196,14 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 				XDI3Segment facebookUserXri = XDI3Segment.create("[!]!" + facebookUserId);
 
 				ContextNode facebookUserContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + facebookUserXri));
-				ContextNode userContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + userXri));
+				ContextNode userContextNode = messageResult.getGraph().setDeepContextNode(contributorsXri);
 
 				Equivalence.addIdentityContextNode(userContextNode, facebookUserContextNode);
 			}
 
 			// done
 
-			return true;
+			return false;
 		}
 	}
 
@@ -218,7 +216,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 
 		@Override
-		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			if (! FacebookContributor.this.isEnabled()) return false;
 
@@ -227,6 +225,8 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 			XDI3Segment facebookDataXri = contributorXris[contributorXris.length - 1];
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userXri: " + userXri + ", facebookDataXri: " + facebookDataXri);
+
+			if (userXri.equals("{{=@*!}}")) return false;
 
 			// retrieve the Facebook friends
 
@@ -251,7 +251,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			if (facebookFriends != null) {
 
-				XdiEntityClass friendXdiEntityClass = XdiEntityClass.fromContextNode(messageResult.getGraph().setDeepContextNode(contextNodeXri));
+				XdiEntityClass friendXdiEntityClass = XdiEntityClass.fromContextNode(messageResult.getGraph().setDeepContextNode(contributorsXri));
 
 				for (int i=0; i<facebookFriends.length(); i++) {
 
@@ -281,7 +281,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			// done
 
-			return true;
+			return false;
 		}
 	}
 
@@ -294,7 +294,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 
 		@Override
-		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment relativeContextNodeXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			if (! FacebookContributor.this.isEnabled()) return false;
 
@@ -303,6 +303,9 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 			XDI3Segment facebookDataXri = contributorXris[contributorXris.length - 1];
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userXri: " + userXri + ", facebookDataXri: " + facebookDataXri);
+
+			if (userXri.equals("{{=@*!}}")) return false;
+			if (facebookDataXri.equals("{+}")) return false;
 
 			// parse identifiers
 
@@ -336,13 +339,13 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			if (facebookField != null) {
 
-				XdiAttributeSingleton xdiAttributeSingleton = (XdiAttributeSingleton) XdiAbstractAttribute.fromContextNode(messageResult.getGraph().setDeepContextNode(contextNodeXri));
+				XdiAttributeSingleton xdiAttributeSingleton = (XdiAttributeSingleton) XdiAbstractAttribute.fromContextNode(messageResult.getGraph().setDeepContextNode(contributorsXri));
 				xdiAttributeSingleton.getXdiValue(true).getContextNode().setLiteral(facebookField);
 			}
 
 			// done
 
-			return true;
+			return false;
 		}
 	}
 
