@@ -87,7 +87,7 @@ public class FacebookApi {
 		String state = parameterMap.containsKey("state") ? ((String[]) parameterMap.get("state"))[0] : null;
 
 		if (state == null) {
-			
+
 			log.warn("No OAuth state received.");
 			return;
 		}
@@ -166,15 +166,15 @@ public class FacebookApi {
 		log.debug("Access token revoked.");
 	}
 
-	public JSONObject getUser(String accessToken, String fields) throws IOException, JSONException {
+	public JSONObject getUser(String id, String accessToken, String fields) throws IOException, JSONException {
 
 		if (accessToken == null) throw new NullPointerException();
 
-		log.debug("Retrieving User for Access Token '" + accessToken + "'");
+		log.debug("Retrieving User for ID " + id + " and access token '" + accessToken + "'");
 
 		// send request
 
-		StringBuffer location = new StringBuffer("https://graph.facebook.com/me?");
+		StringBuffer location = new StringBuffer("https://graph.facebook.com/" + id + "?");
 		location.append("access_token=" + accessToken);
 		if (fields != null) location.append("&fields=" + fields);
 
@@ -197,6 +197,11 @@ public class FacebookApi {
 
 		log.debug("User: " + user);
 		return user;
+	}
+
+	public JSONObject getUser(String accessToken, String fields) throws IOException, JSONException {
+
+		return this.getUser("me", accessToken, fields);
 	}
 
 	private static String uriWithoutQuery(String url) {

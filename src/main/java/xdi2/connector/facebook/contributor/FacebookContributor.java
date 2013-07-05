@@ -39,7 +39,6 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookContributor.class);
 
-	private boolean enabled;
 	private Graph tokenGraph;
 	private FacebookApi facebookApi;
 	private FacebookMapping facebookMapping;
@@ -47,8 +46,6 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	public FacebookContributor() {
 
 		super();
-
-		this.enabled = true;
 
 		this.getContributors().addContributor(new FacebookEnabledContributor());
 		this.getContributors().addContributor(new FacebookUserContributor());
@@ -162,8 +159,6 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		@Override
 		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-			if (! FacebookContributor.this.isEnabled()) return false;
-
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 2];
 			XDI3Segment userXri = contributorXris[contributorXris.length - 1];
 
@@ -178,7 +173,11 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 			try {
 
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
-				if (accessToken == null) throw new Exception("No access token.");
+				if (accessToken == null) {
+					
+					log.warn("No access token for user XRI: " + userXri);
+					return false;
+				}
 
 				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
 				if (user == null) throw new Exception("No user.");
@@ -218,8 +217,6 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		@Override
 		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-			if (! FacebookContributor.this.isEnabled()) return false;
-
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
 			XDI3Segment userXri = contributorXris[contributorXris.length - 2];
 			XDI3Segment facebookDataXri = contributorXris[contributorXris.length - 1];
@@ -235,7 +232,11 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 			try {
 
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
-				if (accessToken == null) throw new Exception("No access token.");
+				if (accessToken == null) {
+					
+					log.warn("No access token for user XRI: " + userXri);
+					return false;
+				}
 
 				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
 				if (user == null) throw new Exception("No user.");
@@ -296,8 +297,6 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		@Override
 		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-			if (! FacebookContributor.this.isEnabled()) return false;
-
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
 			XDI3Segment userXri = contributorXris[contributorXris.length - 2];
 			XDI3Segment facebookDataXri = contributorXris[contributorXris.length - 1];
@@ -323,7 +322,11 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 			try {
 
 				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userXri);
-				if (accessToken == null) throw new Exception("No access token.");
+				if (accessToken == null) {
+					
+					log.warn("No access token for user XRI: " + userXri);
+					return false;
+				}
 
 				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
 				if (user == null) throw new Exception("No user.");
@@ -372,16 +375,6 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	/*
 	 * Getters and setters
 	 */
-
-	public boolean isEnabled() {
-
-		return this.enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-
-		this.enabled = enabled;
-	}
 
 	public Graph getTokenGraph() {
 
