@@ -21,6 +21,7 @@ import xdi2.client.XDIClient;
 import xdi2.client.exceptions.Xdi2ClientException;
 import xdi2.client.http.XDIHttpClient;
 import xdi2.connector.facebook.api.FacebookApi;
+import xdi2.connector.facebook.mapping.FacebookMapping;
 import xdi2.connector.facebook.util.GraphUtil;
 import xdi2.core.Graph;
 import xdi2.core.impl.memory.MemoryGraphFactory;
@@ -45,6 +46,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 	private Graph graph;
 	private FacebookApi facebookApi;
+	private FacebookMapping facebookMapping;
 
 	static {
 
@@ -79,6 +81,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 		this.graph = null;
 		this.facebookApi = null;
+		this.facebookMapping = null;
 	}
 
 	@Override
@@ -118,12 +121,16 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 			try {
 
-				String accessToken = GraphUtil.retrieveAccessToken(this.getGraph(), userXri);
-				if (accessToken == null) throw new Exception("No access token in graph.");
+				String facebookAccessToken = GraphUtil.retrieveAccessToken(this.getGraph(), userXri);
+				if (facebookAccessToken == null) throw new Exception("No access token in graph.");
 
-				this.getFacebookApi().revokeAccessToken(accessToken);
+				String facebookUserId = this.getFacebookApi().retrieveUserId(facebookAccessToken);
+				XDI3Segment facebookUserIdXri = this.getFacebookMapping().facebookUserIdToFacebookUserIdXri(facebookUserId);
 
-				GraphUtil.removeAccessToken(this.getGraph(), userXri);
+				this.getFacebookApi().revokeAccessToken(facebookAccessToken);
+
+				GraphUtil.removeAccessToken(this.getGraph(), facebookUserIdXri);
+				GraphUtil.removeFacebookUserIdXri(this.getGraph(), facebookUserIdXri);
 
 				request.setAttribute("feedback", "Access token successfully revoked and removed from graph.");
 			} catch (Exception ex) {
@@ -153,10 +160,14 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 
 				this.getFacebookApi().checkState(request.getParameterMap(), userXri);
 
-				String accessToken = this.getFacebookApi().exchangeCodeForAccessToken(request.getRequestURL().toString(), request.getParameterMap());
-				if (accessToken == null) throw new Exception("No access token received.");
+				String facebookAccessToken = this.getFacebookApi().exchangeCodeForAccessToken(request.getRequestURL().toString(), request.getParameterMap());
+				if (facebookAccessToken == null) throw new Exception("No access token received.");
 
-				GraphUtil.storeAccessToken(this.getGraph(), userXri, accessToken);
+				String facebookUserId = this.getFacebookApi().retrieveUserId(facebookAccessToken);
+				XDI3Segment facebookUserIdXri = this.getFacebookMapping().facebookUserIdToFacebookUserIdXri(facebookUserId);
+				
+				GraphUtil.storeFacebookUserIdXri(this.getGraph(), userXri, facebookUserIdXri);
+				GraphUtil.storeFacebookAccessToken(this.getGraph(), facebookUserIdXri, facebookAccessToken);
 
 				request.setAttribute("feedback", "Access token successfully received and stored in graph.");
 			} catch (Exception ex) {
@@ -287,5 +298,15 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 	public void setFacebookApi(FacebookApi facebookApi) {
 
 		this.facebookApi = facebookApi;
+	}
+
+	public FacebookMapping getFacebookMapping() {
+	
+		return this.facebookMapping;
+	}
+
+	public void setFacebookMapping(FacebookMapping facebookMapping) {
+	
+		this.facebookMapping = facebookMapping;
 	}
 }

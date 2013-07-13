@@ -44,8 +44,46 @@ public class FacebookMapping {
 	}
 
 	/**
+	 * Converts a Facebook user ID XRI to a native Facebook user ID.
+	 * Example: [!]!588183713 --> 588183713
+	 */
+	public String facebookUserIdXriToFacebookUserId(XDI3Segment facebookUserIdXri) {
+
+		if (facebookUserIdXri == null) throw new NullPointerException();
+
+		// convert
+
+		String facebookUserId = facebookUserIdXri.getLastSubSegment().getLiteral();
+
+		// done
+
+		if (log.isDebugEnabled()) log.debug("Converted " + facebookUserIdXri + " to " + facebookUserId);
+
+		return facebookUserId;
+	}
+
+	/**
+	 * Converts a native Facebook user ID to a Facebook user ID XRI.
+	 * Example: 588183713 --> [!]!588183713
+	 */
+	public XDI3Segment facebookUserIdToFacebookUserIdXri(String facebookUserId) {
+
+		if (facebookUserId == null) throw new NullPointerException();
+
+		// convert
+
+		XDI3Segment facebookUserIdXri = XDI3Segment.create("[!]!" + facebookUserId);
+
+		// done
+
+		if (log.isDebugEnabled()) log.debug("Converted " + facebookUserId + " to " + facebookUserIdXri);
+
+		return facebookUserIdXri;
+	}
+
+	/**
 	 * Converts a Facebook data XRI to a native Facebook object identifier.
-	 * Example: +(user)$!(+(first_name)) --> user
+	 * Example: +(user)<+(first_name)> --> user
 	 */
 	public String facebookDataXriToFacebookObjectIdentifier(XDI3Segment facebookDataXri) {
 
@@ -64,7 +102,7 @@ public class FacebookMapping {
 
 	/**
 	 * Converts a Facebook data XRI to a native Facebook field identifier.
-	 * Example: +(user)$!(+(first_name)) --> first_name
+	 * Example: +(user)<+(first_name)> --> first_name
 	 */
 	public String facebookDataXriToFacebookFieldIdentifier(XDI3Segment facebookDataXri) {
 
@@ -83,7 +121,7 @@ public class FacebookMapping {
 
 	/**
 	 * Maps and converts a Facebook data XRI to an XDI data XRI.
-	 * Example: +(user)$!(+(first_name)) --> +first$!(+name)
+	 * Example: +(user)<+(first_name)> --> +first<+name>
 	 */
 	public XDI3Segment facebookDataXriToXdiDataXri(XDI3Segment facebookDataXri) {
 
@@ -127,7 +165,7 @@ public class FacebookMapping {
 
 	/**
 	 * Maps and converts an XDI data XRI to a Facebook data XRI.
-	 * Example: +first$!(+name) --> +(user)$!(+(first_name)) 
+	 * Example: +first<+name> --> +(user)<+(first_name)> 
 	 */
 	public XDI3Segment xdiDataXriToFacebookDataXri(XDI3Segment xdiDataXri) {
 

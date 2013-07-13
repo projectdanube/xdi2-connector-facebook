@@ -166,15 +166,15 @@ public class FacebookApi {
 		log.debug("Access token revoked.");
 	}
 
-	public JSONObject getUser(String id, String accessToken, String fields) throws IOException, JSONException {
+	public JSONObject retrieveUser(String facebookUserId, String accessToken, String fields) throws IOException, JSONException {
 
 		if (accessToken == null) throw new NullPointerException();
 
-		log.debug("Retrieving User for ID " + id + " and access token '" + accessToken + "'");
+		log.debug("Retrieving user for user ID " + facebookUserId + " and access token '" + accessToken + "'");
 
 		// send request
 
-		StringBuffer location = new StringBuffer("https://graph.facebook.com/" + id + "?");
+		StringBuffer location = new StringBuffer("https://graph.facebook.com/" + facebookUserId + "?");
 		location.append("access_token=" + accessToken);
 		if (fields != null) location.append("&fields=" + fields);
 
@@ -199,9 +199,23 @@ public class FacebookApi {
 		return user;
 	}
 
-	public JSONObject getUser(String accessToken, String fields) throws IOException, JSONException {
+	public JSONObject retrieveUser(String accessToken, String fields) throws IOException, JSONException {
 
-		return this.getUser("me", accessToken, fields);
+		return this.retrieveUser("me", accessToken, fields);
+	}
+
+	public String retrieveUserId(String accessToken) throws IOException, JSONException {
+
+		if (accessToken == null) throw new NullPointerException();
+
+		log.debug("Retrieving User ID for access token '" + accessToken + "'");
+
+		// retrieve the Facebook user ID
+
+		JSONObject user = this.retrieveUser(accessToken, null);
+		if (user == null) throw new IOException("No user.");
+
+		return user.getString("id");
 	}
 
 	private static String uriWithoutQuery(String url) {
