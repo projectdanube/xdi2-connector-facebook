@@ -31,7 +31,7 @@
 
 	<!-- WEB SERVLET -->
 
-	<bean id="ConnectServlet" class="xdi2.connector.facebook.connect.ConnectServlet" init-method="init" destroy-method="destroy">
+	<bean id="ClientServlet" class="xdi2.connector.facebook.client.ClientServlet" init-method="init" destroy-method="destroy">
 		<property name="graph" ref="graph1" />
 		<property name="facebookApi" ref="facebookApi" />
 		<property name="facebookMapping" ref="facebookMapping" />

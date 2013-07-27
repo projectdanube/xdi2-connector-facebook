@@ -13,12 +13,12 @@
 	</welcome-file-list>
 
 	<servlet>
-		<servlet-name>ConnectServlet</servlet-name>
+		<servlet-name>ClientServlet</servlet-name>
 		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>ConnectServlet</servlet-name>
-		<url-pattern>/connect</url-pattern>
+		<servlet-name>ClientServlet</servlet-name>
+		<url-pattern>/client</url-pattern>
 	</servlet-mapping>
 
 	<!-- XDI SERVLET -->

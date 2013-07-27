@@ -1,4 +1,4 @@
-package xdi2.connector.facebook.connect;
+package xdi2.connector.facebook.client;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,11 +34,11 @@ import xdi2.core.xri3.XDI3Segment;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
 
-public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
+public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
 	private static final long serialVersionUID = 3793048689633131588L;
 
-	private static final Logger log = LoggerFactory.getLogger(ConnectServlet.class);
+	private static final Logger log = LoggerFactory.getLogger(ClientServlet.class);
 
 	private static MemoryGraphFactory graphFactory;
 	static String sampleInput;
@@ -53,7 +53,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 		graphFactory = MemoryGraphFactory.getInstance();
 		graphFactory.setSortmode(MemoryGraphFactory.SORTMODE_ORDER);
 
-		InputStream inputStream = ConnectServlet.class.getResourceAsStream("message.xdi");
+		InputStream inputStream = ClientServlet.class.getResourceAsStream("message.xdi");
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		int i;
 
@@ -77,7 +77,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 		sampleEndpoint = "/xdi/facebook"; 
 	}
 
-	public ConnectServlet() {
+	public ClientServlet() {
 
 		this.graph = null;
 		this.facebookApi = null;
@@ -185,7 +185,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 		request.setAttribute("input", sampleInput);
 		request.setAttribute("endpoint", request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/")) + sampleEndpoint);
 
-		request.getRequestDispatcher("/Connect.jsp").forward(request, response);
+		request.getRequestDispatcher("/Client.jsp").forward(request, response);
 	}
 
 	@Override
@@ -277,7 +277,7 @@ public class ConnectServlet extends HttpServlet implements HttpRequestHandler {
 		request.setAttribute("stats", stats);
 		request.setAttribute("error", error);
 
-		request.getRequestDispatcher("/Connect.jsp").forward(request, response);
+		request.getRequestDispatcher("/Client.jsp").forward(request, response);
 	}
 
 	public Graph getGraph() {

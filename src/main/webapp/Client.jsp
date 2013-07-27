@@ -32,7 +32,7 @@
 	<p>This step will initiate an OAuth "code flow" (also known as "server-side flow") to the Facebook API, in order to obtain an access token.</p>
 	<p>The token is then stored in your XDI graph, where it is picked up and used by the XDI2 server to handle requests to your Facebook XDI context.</p>
 
-	<form action="connect" method="get">
+	<form action="client" method="get">
 
 	<table>
 	<tr>
@@ -51,7 +51,7 @@
 
 	<p>Certain parts of your graph will only be accessible if you have a Facebook API access token.</p>
 
-	<form action="connect" method="post">
+	<form action="client" method="post">
 
 		<textarea name="input" style="width: 100%" rows="12"><%= request.getAttribute("input") != null ? request.getAttribute("input") : "" %></textarea><br>
 
