@@ -6,6 +6,7 @@ import xdi2.core.Graph;
 import xdi2.core.Literal;
 import xdi2.core.constants.XDIAuthenticationConstants;
 import xdi2.core.constants.XDIDictionaryConstants;
+import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.xri3.XDI3Segment;
 
 public class GraphUtil {
@@ -43,7 +44,7 @@ public class GraphUtil {
 		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri);
 		XDI3Segment targetContextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + facebookUserIdXri);
 
-		graph.setDeepRelation(contextNodeXri, XDIDictionaryConstants.XRI_S_REF, targetContextNodeXri);
+		Equivalence.setReferenceContextNode(graph.setDeepContextNode(contextNodeXri), graph.setDeepContextNode(targetContextNodeXri));
 	}
 
 	public static void removeFacebookUserIdXri(Graph graph, XDI3Segment facebookUserIdXri) {

@@ -1,7 +1,7 @@
 <a href="http://projectdanube.org/" target="_blank"><img src="http://projectdanube.github.com/xdi2/images/projectdanube_logo.png" align="right"></a>
 <img src="http://projectdanube.github.com/xdi2/images/logo64.png"><br>
 
-This is a connector module for the [XDI2](http://github.com/projectdanube/xdi2) server.
+This is a connector plugin for the [XDI2](http://github.com/projectdanube/xdi2) server.
 
 It can map personal data from the [Facebook Graph API](https://developers.facebook.com/docs/reference/api/) to XDI. 
 

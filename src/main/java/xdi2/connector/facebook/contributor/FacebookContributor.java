@@ -145,7 +145,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 	}
 
-	@ContributorXri(addresses={"[=]{!}"})
+	@ContributorXri(addresses={"[!]{!}"})
 	private class FacebookUserContributor extends AbstractContributor {
 
 		private FacebookUserContributor() {
@@ -164,7 +164,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + userIdXri);
 
-			if (userIdXri.equals("[=]{!}")) return false;
+			if (userIdXri.equals("[!]{!}")) return false;
 
 			// retrieve the Facebook user ID
 
@@ -222,7 +222,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + userIdXri);
 
-			if (userIdXri.equals("[=]{!}")) return false;
+			if (userIdXri.equals("[!]{!}")) return false;
 
 			// retrieve the Facebook friends
 
@@ -302,7 +302,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + facebookUserIdXri + ", facebookDataXri: " + facebookDataXri);
 
-			if (facebookUserIdXri.equals("[=]{!}")) return false;
+			if (facebookUserIdXri.equals("[!]{!}")) return false;
 			if (facebookDataXri.equals("{+}")) return false;
 
 			// parse identifiers
