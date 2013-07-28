@@ -10,9 +10,9 @@
 <body style="background-image: url('images/back.png'); background-repeat: repeat-y; margin-left: 60px;">
 
 	<div class="header">
-	<img src="images/facebook-logo.png" align="middle">&nbsp;&nbsp;&nbsp;
+	<img src="images/logo64.png" align="middle">&nbsp;&nbsp;&nbsp;
 	<img src="images/arrow.png" align="middle">&nbsp;&nbsp;&nbsp;
-	<img src="images/logo64.png" align="middle">&nbsp;&nbsp;&nbsp;<span id="appname">xdi2-connector-facebook</span>
+	<img src="images/facebook-logo.png" align="middle">&nbsp;&nbsp;&nbsp;<span id="appname">xdi2-connector-facebook</span>
 	</div>
 
 	<% if (request.getAttribute("error") != null) { %>
@@ -56,8 +56,9 @@
 		<textarea name="input" style="width: 100%" rows="12"><%= request.getAttribute("input") != null ? request.getAttribute("input") : "" %></textarea><br>
 
 		<% String resultFormat = (String) request.getAttribute("resultFormat"); if (resultFormat == null) resultFormat = ""; %>
-		<% String writeContexts = (String) request.getAttribute("writeContexts"); if (writeContexts == null) writeContexts = ""; %>
+		<% String writeImplied = (String) request.getAttribute("writeImplied"); if (writeImplied == null) writeImplied = ""; %>
 		<% String writeOrdered = (String) request.getAttribute("writeOrdered"); if (writeOrdered == null) writeOrdered = ""; %>
+		<% String writeInner = (String) request.getAttribute("writeInner"); if (writeInner == null) writeInner = ""; %>
 		<% String writePretty = (String) request.getAttribute("writePretty"); if (writePretty == null) writePretty = ""; %>
 		<% String endpoint = (String) request.getAttribute("endpoint"); if (endpoint == null) endpoint = ""; %>
 
@@ -71,9 +72,11 @@
 		</select>
 		&nbsp;
 
-		<input name="writeContexts" type="checkbox" <%= writeContexts.equals("on") ? "checked" : "" %>>contexts=1
+		<input name="writeImplied" type="checkbox" <%= writeImplied.equals("on") ? "checked" : "" %>>implied=1
 
 		<input name="writeOrdered" type="checkbox" <%= writeOrdered.equals("on") ? "checked" : "" %>>ordered=1
+
+		<input name="writeInner" type="checkbox" <%= writeInner.equals("on") ? "checked" : "" %>>inner=1
 
 		<input name="writePretty" type="checkbox" <%= writePretty.equals("on") ? "checked" : "" %>>pretty=1
 

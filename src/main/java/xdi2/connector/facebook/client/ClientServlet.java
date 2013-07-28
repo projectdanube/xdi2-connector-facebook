@@ -74,7 +74,7 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 			}
 		}
 
-		sampleEndpoint = "/xdi/facebook"; 
+		sampleEndpoint = "/xdi/graph"; 
 	}
 
 	public ClientServlet() {
@@ -179,8 +179,9 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 		// display results
 
 		request.setAttribute("resultFormat", XDIDisplayWriter.FORMAT_NAME);
-		request.setAttribute("writeContexts", null);
+		request.setAttribute("writeImplied", null);
 		request.setAttribute("writeOrdered", "on");
+		request.setAttribute("writeInner", "on");
 		request.setAttribute("writePretty", null);
 		request.setAttribute("input", sampleInput);
 		request.setAttribute("endpoint", request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/")) + sampleEndpoint);
@@ -192,8 +193,9 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String resultFormat = request.getParameter("resultFormat");
-		String writeContexts = request.getParameter("writeContexts");
+		String writeImplied = request.getParameter("writeImplied");
 		String writeOrdered = request.getParameter("writeOrdered");
+		String writeInner = request.getParameter("writeInner");
 		String writePretty = request.getParameter("writePretty");
 		String input = request.getParameter("input");
 		String endpoint = request.getParameter("endpoint");
@@ -203,9 +205,10 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
 		Properties xdiResultWriterParameters = new Properties();
 
-		if ("on".equals(writeContexts)) xdiResultWriterParameters.setProperty(XDIWriterRegistry.PARAMETER_IMPLIED, "1");
-		if ("on".equals(writeOrdered)) xdiResultWriterParameters.setProperty(XDIWriterRegistry.PARAMETER_ORDERED, "1");
-		if ("on".equals(writePretty)) xdiResultWriterParameters.setProperty(XDIWriterRegistry.PARAMETER_PRETTY, "1");
+		xdiResultWriterParameters.setProperty(XDIWriterRegistry.PARAMETER_IMPLIED, "on".equals(writeImplied) ? "1" : "0");
+		xdiResultWriterParameters.setProperty(XDIWriterRegistry.PARAMETER_ORDERED, "on".equals(writeOrdered) ? "1" : "0");
+		xdiResultWriterParameters.setProperty(XDIWriterRegistry.PARAMETER_INNER, "on".equals(writeInner) ? "1" : "0");
+		xdiResultWriterParameters.setProperty(XDIWriterRegistry.PARAMETER_PRETTY, "on".equals(writePretty) ? "1" : "0");
 
 		XDIReader xdiReader = XDIReaderRegistry.getAuto();
 		XDIWriter xdiResultWriter = XDIWriterRegistry.forFormat(resultFormat, xdiResultWriterParameters);
@@ -268,8 +271,9 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 		// display results
 
 		request.setAttribute("resultFormat", resultFormat);
-		request.setAttribute("writeContexts", writeContexts);
+		request.setAttribute("writeImplied", writeImplied);
 		request.setAttribute("writeOrdered", writeOrdered);
+		request.setAttribute("writeInner", writeInner);
 		request.setAttribute("writePretty", writePretty);
 		request.setAttribute("input", input);
 		request.setAttribute("endpoint", endpoint);
