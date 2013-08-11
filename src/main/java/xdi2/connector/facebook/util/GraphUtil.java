@@ -19,7 +19,7 @@ public class GraphUtil {
 
 		Literal literal = graph.getDeepLiteral(contextNodeXri);
 
-		return literal == null ? null : literal.getLiteralData();
+		return literal == null ? null : literal.getLiteralDataString();
 	}
 
 	public static void storeFacebookAccessToken(Graph graph, XDI3Segment facebookUserIdXri, String accessToken) {
