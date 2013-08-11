@@ -22,11 +22,11 @@ public class GraphUtil {
 		return literal == null ? null : literal.getLiteralDataString();
 	}
 
-	public static void storeFacebookAccessToken(Graph graph, XDI3Segment facebookUserIdXri, String accessToken) {
+	public static void storeFacebookAccessToken(Graph graph, XDI3Segment facebookUserIdXri, String facebookAccessToken) {
 
 		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XRI_S_OAUTH_TOKEN);
 
-		graph.setDeepLiteral(contextNodeXri, accessToken);
+		graph.setDeepLiteral(contextNodeXri, facebookAccessToken);
 	}
 
 	public static void removeAccessToken(Graph graph, XDI3Segment facebookUserIdXri) {
