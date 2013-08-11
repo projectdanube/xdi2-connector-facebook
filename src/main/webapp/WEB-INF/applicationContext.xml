@@ -37,7 +37,7 @@
 		<property name="facebookMapping" ref="facebookMapping" />
 	</bean>
 
-	<!-- MESSAGING TARGET at /facebook -->
+	<!-- MESSAGING TARGET at /graph -->
 	<!-- MessagingTarget: GraphMessagingTarget backed by a MemoryGraph -->
 
 	<bean id="graphfactory1" class="xdi2.core.impl.memory.MemoryGraphFactory">
@@ -66,7 +66,7 @@
 		<property name="mappingGraph" ref="facebookMappingGraph" />
 	</bean>
 
-	<bean name="/facebook" class="xdi2.messaging.target.impl.graph.GraphMessagingTarget">
+	<bean name="/graph" class="xdi2.messaging.target.impl.graph.GraphMessagingTarget">
 		<property name="graph" ref="graph1" />
 		<property name="interceptors">
 			<util:list>
