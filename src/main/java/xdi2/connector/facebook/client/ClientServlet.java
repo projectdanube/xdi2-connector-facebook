@@ -264,9 +264,9 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
 		stats = "";
 		stats += Long.toString(stop - start) + " ms time. ";
-		if (messageEnvelope != null) stats += Integer.toString(messageEnvelope.getMessageCount()) + " message(s). ";
-		if (messageEnvelope != null) stats += Integer.toString(messageEnvelope.getOperationCount()) + " operation(s). ";
-		if (messageResult != null) stats += Integer.toString(messageResult.getGraph().getRootContextNode().getAllStatementCount()) + " result statement(s). ";
+		if (messageEnvelope != null) stats += Long.toString(messageEnvelope.getMessageCount()) + " message(s). ";
+		if (messageEnvelope != null) stats += Long.toString(messageEnvelope.getOperationCount()) + " operation(s). ";
+		if (messageResult != null) stats += Long.toString(messageResult.getGraph().getRootContextNode().getAllStatementCount()) + " result statement(s). ";
 
 		// display results
 
