@@ -20,6 +20,7 @@ import xdi2.core.features.nodetypes.XdiAttributeSingleton;
 import xdi2.core.features.nodetypes.XdiEntityClass;
 import xdi2.core.features.nodetypes.XdiEntityInstanceOrdered;
 import xdi2.core.xri3.XDI3Segment;
+import xdi2.core.xri3.XDI3Statement;
 import xdi2.messaging.GetOperation;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
@@ -123,7 +124,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	private class FacebookEnabledContributor extends AbstractContributor {
 
 		@Override
-		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			if (FacebookContributor.this.isEnabled())
 				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral(Integer.valueOf(1));
@@ -134,7 +135,9 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 
 		@Override
-		public boolean setLiteral(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeContextNodeXri, Object literalData, SetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean executeSetOnLiteralStatement(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Statement relativeTargetStatement, SetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+
+			Object literalData = relativeTargetStatement.getLiteralData();
 
 			if (Integer.valueOf(1).equals(literalData))
 				FacebookContributor.this.setEnabled(true);
@@ -157,7 +160,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 
 		@Override
-		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 2];
 			XDI3Segment userIdXri = contributorXris[contributorXris.length - 1];
@@ -215,7 +218,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 
 		@Override
-		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment targetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
 			XDI3Segment userIdXri = contributorXris[contributorXris.length - 2];
@@ -275,7 +278,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 					XdiEntityInstanceOrdered friendXdiEntityInstanceOrdered = friendXdiEntityClass.setXdiInstanceOrdered(-1);
 
-					Equivalence.addIdentityContextNode(friendXdiEntityInstanceOrdered.getContextNode(), facebookFriendContextNode);
+					Equivalence.setIdentityContextNode(friendXdiEntityInstanceOrdered.getContextNode(), facebookFriendContextNode);
 				}
 			}
 
@@ -294,7 +297,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		}
 
 		@Override
-		public boolean getContext(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment contextNodeXri, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public boolean executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment targetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
 			XDI3Segment facebookUserIdXri = contributorXris[contributorXris.length - 2];

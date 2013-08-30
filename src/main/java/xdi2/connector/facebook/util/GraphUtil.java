@@ -54,6 +54,6 @@ public class GraphUtil {
 		ContextNode contextNode = graph.getDeepContextNode(contextNodeXri);
 		if (contextNode == null) return;
 
-		contextNode.deleteRelations(XDIDictionaryConstants.XRI_S_REF);
+		contextNode.delRelations(XDIDictionaryConstants.XRI_S_REF);
 	}
 }
