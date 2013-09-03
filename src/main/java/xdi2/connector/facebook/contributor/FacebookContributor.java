@@ -138,7 +138,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		public boolean executeSetOnLiteralStatement(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Statement relativeTargetStatement, SetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			Object literalData = relativeTargetStatement.getLiteralData();
-			
+
 			if (Integer.valueOf(1).equals(literalData))
 				FacebookContributor.this.setEnabled(true);
 			else
