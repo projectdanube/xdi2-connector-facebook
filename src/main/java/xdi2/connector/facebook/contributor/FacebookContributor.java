@@ -127,9 +127,9 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 		public boolean executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			if (FacebookContributor.this.isEnabled())
-				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral(Integer.valueOf(1));
+				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral(Double.valueOf(1));
 			else
-				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral(Integer.valueOf(0));
+				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral(Double.valueOf(0));
 
 			return false;
 		}
