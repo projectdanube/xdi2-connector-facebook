@@ -17,8 +17,8 @@ import xdi2.core.constants.XDIConstants;
 import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.features.nodetypes.XdiAbstractAttribute;
 import xdi2.core.features.nodetypes.XdiAttributeSingleton;
-import xdi2.core.features.nodetypes.XdiEntityClass;
-import xdi2.core.features.nodetypes.XdiEntityInstanceOrdered;
+import xdi2.core.features.nodetypes.XdiEntityCollection;
+import xdi2.core.features.nodetypes.XdiEntityMemberOrdered;
 import xdi2.core.xri3.XDI3Segment;
 import xdi2.core.xri3.XDI3Statement;
 import xdi2.messaging.GetOperation;
@@ -254,7 +254,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			if (facebookFriends != null) {
 
-				XdiEntityClass friendXdiEntityClass = XdiEntityClass.fromContextNode(messageResult.getGraph().setDeepContextNode(contributorsXri));
+				XdiEntityCollection friendXdiEntityCollection = XdiEntityCollection.fromContextNode(messageResult.getGraph().setDeepContextNode(contributorsXri));
 
 				for (int i=0; i<facebookFriends.length(); i++) {
 
@@ -276,9 +276,9 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 					ContextNode facebookFriendContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + facebookFriendXri));
 					facebookFriendContextNode.setDeepContextNode(XDI3Segment.create("<+name>&")).setLiteral(facebookFriendName);
 
-					XdiEntityInstanceOrdered friendXdiEntityInstanceOrdered = friendXdiEntityClass.setXdiInstanceOrdered(-1);
+					XdiEntityMemberOrdered friendXdiEntityMemberOrdered = friendXdiEntityCollection.setXdiMemberOrdered(-1);
 
-					Equivalence.setIdentityContextNode(friendXdiEntityInstanceOrdered.getContextNode(), facebookFriendContextNode);
+					Equivalence.setIdentityContextNode(friendXdiEntityMemberOrdered.getContextNode(), facebookFriendContextNode);
 				}
 			}
 
