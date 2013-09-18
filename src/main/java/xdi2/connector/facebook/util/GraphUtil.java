@@ -5,6 +5,7 @@ import xdi2.core.ContextNode;
 import xdi2.core.Graph;
 import xdi2.core.Literal;
 import xdi2.core.constants.XDIAuthenticationConstants;
+import xdi2.core.constants.XDIConstants;
 import xdi2.core.constants.XDIDictionaryConstants;
 import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.xri3.XDI3Segment;
@@ -15,7 +16,7 @@ public class GraphUtil {
 
 	public static String retrieveAccessToken(Graph graph, XDI3Segment userXri) {
 
-		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIAuthenticationConstants.XRI_S_OAUTH_TOKEN);
+		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIAuthenticationConstants.XRI_S_OAUTH_TOKEN + XDIConstants.XRI_S_VALUE);
 
 		Literal literal = graph.getDeepLiteral(contextNodeXri);
 
@@ -24,14 +25,14 @@ public class GraphUtil {
 
 	public static void storeFacebookAccessToken(Graph graph, XDI3Segment facebookUserIdXri, String facebookAccessToken) {
 
-		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XRI_S_OAUTH_TOKEN);
+		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XRI_S_OAUTH_TOKEN + XDIConstants.XRI_S_VALUE);
 
 		graph.setDeepLiteral(contextNodeXri, facebookAccessToken);
 	}
 
 	public static void removeAccessToken(Graph graph, XDI3Segment facebookUserIdXri) {
 
-		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XRI_S_OAUTH_TOKEN);
+		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XRI_S_OAUTH_TOKEN + XDIConstants.XRI_S_VALUE);
 
 		ContextNode contextNode = graph.getDeepContextNode(contextNodeXri);
 		if (contextNode == null) return;

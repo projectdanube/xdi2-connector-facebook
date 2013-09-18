@@ -165,12 +165,14 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
 				String facebookUserId = this.getFacebookApi().retrieveUserId(facebookAccessToken);
 				XDI3Segment facebookUserIdXri = this.getFacebookMapping().facebookUserIdToFacebookUserIdXri(facebookUserId);
-				
+
 				GraphUtil.storeFacebookUserIdXri(this.getGraph(), userXri, facebookUserIdXri);
 				GraphUtil.storeFacebookAccessToken(this.getGraph(), facebookUserIdXri, facebookAccessToken);
 
 				request.setAttribute("feedback", "Access token successfully received and stored in graph.");
 			} catch (Exception ex) {
+
+				log.error(ex.getMessage(), ex);
 
 				request.setAttribute("error", ex.getMessage());
 			}
@@ -305,12 +307,12 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 	}
 
 	public FacebookMapping getFacebookMapping() {
-	
+
 		return this.facebookMapping;
 	}
 
 	public void setFacebookMapping(FacebookMapping facebookMapping) {
-	
+
 		this.facebookMapping = facebookMapping;
 	}
 }
