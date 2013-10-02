@@ -34,20 +34,17 @@ public class FacebookApi {
 
 	private String appId;
 	private String appSecret;
-	private HttpClient httpClient;
 
 	public FacebookApi() {
 
 		this.appId = null;
 		this.appSecret = null;
-		this.httpClient = new DefaultHttpClient();
 	}
 
 	public FacebookApi(String appId, String appSecret) {
 
 		this.appId = appId;
 		this.appSecret = appSecret;
-		this.httpClient = new DefaultHttpClient();
 	}
 
 	public void init() {
@@ -56,7 +53,6 @@ public class FacebookApi {
 
 	public void destroy() {
 
-		this.httpClient.getConnectionManager().shutdown();
 	}
 
 	public String startOAuth(HttpServletRequest request, String redirectUri, XDI3Segment userXri) throws IOException {
@@ -114,8 +110,9 @@ public class FacebookApi {
 		location.append("&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8"));
 		location.append("&code=" + URLEncoder.encode(code, "UTF-8"));
 
+		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(URI.create(location.toString()));
-		HttpResponse httpResponse = this.httpClient.execute(httpGet);
+		HttpResponse httpResponse = httpClient.execute(httpGet);
 		HttpEntity httpEntity = httpResponse.getEntity();
 
 		// read response
@@ -129,6 +126,7 @@ public class FacebookApi {
 		for (NameValuePair nameValuePair : nameValuePairs) if ("access_token".equals(nameValuePair.getName())) { accessToken = nameValuePair.getValue(); break; }
 
 		EntityUtils.consume(httpEntity);
+		httpClient.getConnectionManager().shutdown();
 
 		// done
 
@@ -147,8 +145,9 @@ public class FacebookApi {
 		StringBuffer location = new StringBuffer("https://graph.facebook.com/me/permissions?");
 		location.append("access_token=" + accessToken);
 
+		HttpClient httpClient = new DefaultHttpClient();
 		HttpDelete httpDelete = new HttpDelete(URI.create(location.toString()));
-		HttpResponse httpResponse = this.httpClient.execute(httpDelete);
+		HttpResponse httpResponse = httpClient.execute(httpDelete);
 		HttpEntity httpEntity = httpResponse.getEntity();
 
 		// read response
@@ -156,6 +155,7 @@ public class FacebookApi {
 		String content = EntityUtils.toString(httpEntity);
 
 		EntityUtils.consume(httpEntity);
+		httpClient.getConnectionManager().shutdown();
 
 		// check for error
 
@@ -178,8 +178,9 @@ public class FacebookApi {
 		location.append("access_token=" + accessToken);
 		if (fields != null) location.append("&fields=" + fields);
 
+		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(URI.create(location.toString()));
-		HttpResponse httpResponse = this.httpClient.execute(httpGet);
+		HttpResponse httpResponse = httpClient.execute(httpGet);
 		HttpEntity httpEntity = httpResponse.getEntity();
 
 		// read response
@@ -188,6 +189,7 @@ public class FacebookApi {
 		JSONObject user = new JSONObject(content);
 
 		EntityUtils.consume(httpEntity);
+		httpClient.getConnectionManager().shutdown();
 
 		// check for error
 
