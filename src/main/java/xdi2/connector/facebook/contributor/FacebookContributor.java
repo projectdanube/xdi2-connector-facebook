@@ -12,7 +12,6 @@ import xdi2.connector.facebook.api.FacebookApi;
 import xdi2.connector.facebook.mapping.FacebookMapping;
 import xdi2.connector.facebook.util.GraphUtil;
 import xdi2.core.ContextNode;
-import xdi2.core.Graph;
 import xdi2.core.constants.XDIConstants;
 import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.features.nodetypes.XdiAbstractAttribute;
@@ -31,16 +30,13 @@ import xdi2.messaging.target.MessagingTarget;
 import xdi2.messaging.target.Prototype;
 import xdi2.messaging.target.contributor.AbstractContributor;
 import xdi2.messaging.target.contributor.ContributorXri;
-import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
 import xdi2.messaging.target.interceptor.MessageEnvelopeInterceptor;
-import xdi2.messaging.target.interceptor.MessagingTargetInterceptor;
 
 @ContributorXri(addresses={"(https://facebook.com/)"})
-public class FacebookContributor extends AbstractContributor implements MessagingTargetInterceptor, MessageEnvelopeInterceptor, Prototype<FacebookContributor> {
+public class FacebookContributor extends AbstractContributor implements MessageEnvelopeInterceptor, Prototype<FacebookContributor> {
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookContributor.class);
 
-	private Graph tokenGraph;
 	private FacebookApi facebookApi;
 	private FacebookMapping facebookMapping;
 
@@ -63,6 +59,10 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 		FacebookContributor contributor = new FacebookContributor();
 
+		// set the graph
+
+		contributor.setGraph(this.getGraph());
+		
 		// set api and mapping
 
 		contributor.setFacebookApi(this.getFacebookApi());
@@ -74,23 +74,18 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	}
 
 	/*
-	 * MessagingTargetInterceptor
+	 * Init and shutdown
 	 */
 
 	@Override
 	public void init(MessagingTarget messagingTarget) throws Exception {
 
-		// set the token graph
+		super.init(messagingTarget);
 
-		if (this.tokenGraph == null && messagingTarget instanceof GraphMessagingTarget) {
+		if (this.getGraph() == null) {
 
-			this.setTokenGraph(((GraphMessagingTarget) messagingTarget).getGraph());
+			throw new Xdi2MessagingException("No graph.", null, null);
 		}
-	}
-
-	@Override
-	public void shutdown(MessagingTarget messagingTarget) throws Exception {
-
 	}
 
 	/*
@@ -233,7 +228,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			try {
 
-				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userIdXri);
+				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getGraph(), userIdXri);
 				if (accessToken == null) {
 
 					log.warn("No access token for user XRI: " + userIdXri);
@@ -325,7 +320,7 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 			try {
 
-				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), facebookUserIdXri);
+				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getGraph(), facebookUserIdXri);
 				if (accessToken == null) {
 
 					log.warn("No access token for user ID: " + facebookUserIdXri);
@@ -395,16 +390,6 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	/*
 	 * Getters and setters
 	 */
-
-	public Graph getTokenGraph() {
-
-		return this.tokenGraph;
-	}
-
-	public void setTokenGraph(Graph tokenGraph) {
-
-		this.tokenGraph = tokenGraph;
-	}
 
 	public FacebookApi getFacebookApi() {
 
