@@ -41,7 +41,6 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 	private FacebookApi facebookApi;
 	private FacebookMapping facebookMapping;
-	
 	private Graph tokenGraph;
 
 	public FacebookContributor() {
