@@ -33,20 +33,23 @@ import xdi2.messaging.target.contributor.AbstractContributor;
 import xdi2.messaging.target.contributor.ContributorXri;
 import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
 import xdi2.messaging.target.interceptor.MessageEnvelopeInterceptor;
-import xdi2.messaging.target.interceptor.MessagingTargetInterceptor;
 
 @ContributorXri(addresses={"(https://facebook.com/)"})
-public class FacebookContributor extends AbstractContributor implements MessagingTargetInterceptor, MessageEnvelopeInterceptor, Prototype<FacebookContributor> {
+public class FacebookContributor extends AbstractContributor implements MessageEnvelopeInterceptor, Prototype<FacebookContributor> {
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookContributor.class);
 
-	private Graph tokenGraph;
 	private FacebookApi facebookApi;
 	private FacebookMapping facebookMapping;
+	private Graph tokenGraph;
 
 	public FacebookContributor() {
 
 		super();
+
+		this.facebookApi = null;
+		this.facebookMapping = null;
+		this.tokenGraph = null;
 
 		this.getContributors().addContributor(new FacebookEnabledContributor());
 		this.getContributors().addContributor(new FacebookUserContributor());
@@ -63,6 +66,10 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 
 		FacebookContributor contributor = new FacebookContributor();
 
+		// set the graph
+
+		contributor.setTokenGraph(this.getTokenGraph());
+
 		// set api and mapping
 
 		contributor.setFacebookApi(this.getFacebookApi());
@@ -74,23 +81,16 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	}
 
 	/*
-	 * MessagingTargetInterceptor
+	 * Init and shutdown
 	 */
 
 	@Override
 	public void init(MessagingTarget messagingTarget) throws Exception {
 
-		// set the token graph
+		super.init(messagingTarget);
 
-		if (this.tokenGraph == null && messagingTarget instanceof GraphMessagingTarget) {
-
-			this.setTokenGraph(((GraphMessagingTarget) messagingTarget).getGraph());
-		}
-	}
-
-	@Override
-	public void shutdown(MessagingTarget messagingTarget) throws Exception {
-
+		if (this.getTokenGraph() == null && messagingTarget instanceof GraphMessagingTarget) this.setTokenGraph(((GraphMessagingTarget) messagingTarget).getGraph()); 
+		if (this.getTokenGraph() == null) throw new Xdi2MessagingException("No token graph.", null, null);
 	}
 
 	/*
@@ -396,16 +396,6 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	 * Getters and setters
 	 */
 
-	public Graph getTokenGraph() {
-
-		return this.tokenGraph;
-	}
-
-	public void setTokenGraph(Graph tokenGraph) {
-
-		this.tokenGraph = tokenGraph;
-	}
-
 	public FacebookApi getFacebookApi() {
 
 		return this.facebookApi;
@@ -424,5 +414,15 @@ public class FacebookContributor extends AbstractContributor implements Messagin
 	public void setFacebookMapping(FacebookMapping facebookMapping) {
 
 		this.facebookMapping = facebookMapping;
+	}
+
+	public Graph getTokenGraph() {
+
+		return this.tokenGraph;
+	}
+
+	public void setTokenGraph(Graph tokenGraph) {
+
+		this.tokenGraph = tokenGraph;
 	}
 }
