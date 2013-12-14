@@ -30,8 +30,10 @@ import xdi2.messaging.exceptions.Xdi2MessagingException;
 import xdi2.messaging.target.MessagingTarget;
 import xdi2.messaging.target.Prototype;
 import xdi2.messaging.target.contributor.AbstractContributor;
+import xdi2.messaging.target.contributor.ContributorResult;
 import xdi2.messaging.target.contributor.ContributorXri;
 import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
+import xdi2.messaging.target.interceptor.InterceptorResult;
 import xdi2.messaging.target.interceptor.MessageEnvelopeInterceptor;
 
 @ContributorXri(addresses={"(https://facebook.com/)"})
@@ -94,21 +96,21 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	}
 
 	/*
-	 * MessageEnvelopeManipulator
+	 * MessageEnvelopeInterceptor
 	 */
 
 	@Override
-	public boolean before(MessageEnvelope messageEnvelope, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+	public InterceptorResult before(MessageEnvelope messageEnvelope, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 		FacebookContributorExecutionContext.resetUsers(executionContext);
 
-		return false;
+		return InterceptorResult.DEFAULT;
 	}
 
 	@Override
-	public boolean after(MessageEnvelope messageEnvelope, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+	public InterceptorResult after(MessageEnvelope messageEnvelope, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-		return false;
+		return InterceptorResult.DEFAULT;
 	}
 
 	@Override
@@ -124,18 +126,18 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	private class FacebookEnabledContributor extends AbstractContributor {
 
 		@Override
-		public boolean executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public ContributorResult executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			if (FacebookContributor.this.isEnabled())
 				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral(Double.valueOf(1));
 			else
 				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral(Double.valueOf(0));
 
-			return false;
+			return new ContributorResult(false, false, true);
 		}
 
 		@Override
-		public boolean executeSetOnLiteralStatement(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Statement relativeTargetStatement, SetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public ContributorResult executeSetOnLiteralStatement(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Statement relativeTargetStatement, SetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			Object literalData = relativeTargetStatement.getLiteralData();
 
@@ -144,7 +146,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 			else
 				FacebookContributor.this.setEnabled(false);
 
-			return false;
+			return new ContributorResult(false, false, true);
 		}
 	}
 
@@ -160,14 +162,14 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 
 		@Override
-		public boolean executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public ContributorResult executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 2];
 			XDI3Segment userIdXri = contributorXris[contributorXris.length - 1];
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + userIdXri);
 
-			if (userIdXri.equals("[!]{!}")) return false;
+			if (userIdXri.equals("[!]{!}")) return ContributorResult.DEFAULT;
 
 			// retrieve the Facebook user ID
 
@@ -205,7 +207,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			// done
 
-			return false;
+			return new ContributorResult(false, false, true);
 		}
 	}
 
@@ -218,14 +220,14 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 
 		@Override
-		public boolean executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public ContributorResult executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
 			XDI3Segment userIdXri = contributorXris[contributorXris.length - 2];
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + userIdXri);
 
-			if (userIdXri.equals("[!]{!}")) return false;
+			if (userIdXri.equals("[!]{!}")) return ContributorResult.DEFAULT;
 
 			// retrieve the Facebook friends
 
@@ -237,12 +239,12 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 				if (accessToken == null) {
 
 					log.warn("No access token for user XRI: " + userIdXri);
-					return false;
+					return new ContributorResult(true, false, true);
 				}
 
 				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, accessToken);
 				if (user == null) throw new Exception("No user.");
-				if (! user.has("friends")) return false;
+				if (! user.has("friends")) return new ContributorResult(true, false, true);
 
 				facebookFriends = user.getJSONObject("friends").getJSONArray("data");
 			} catch (Exception ex) {
@@ -284,7 +286,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			// done
 
-			return false;
+			return new ContributorResult(true, false, true);
 		}
 	}
 
@@ -297,7 +299,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 
 		@Override
-		public boolean executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public ContributorResult executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
 			XDI3Segment facebookUserIdXri = contributorXris[contributorXris.length - 2];
@@ -305,17 +307,17 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + facebookUserIdXri + ", facebookDataXri: " + facebookDataXri);
 
-			if (facebookUserIdXri.equals("[!]{!}")) return false;
-			if (facebookDataXri.equals("{+}")) return false;
+			if (facebookUserIdXri.equals("[!]{!}")) return ContributorResult.DEFAULT;
+			if (facebookDataXri.equals("{+}")) return ContributorResult.DEFAULT;
 
 			// parse identifiers
 
 			String facebookUserId = FacebookContributor.this.facebookMapping.facebookUserIdXriToFacebookUserId(facebookUserIdXri);
 			String facebookObjectIdentifier = FacebookContributor.this.facebookMapping.facebookDataXriToFacebookObjectIdentifier(facebookDataXri);
 			String facebookFieldIdentifier = FacebookContributor.this.facebookMapping.facebookDataXriToFacebookFieldIdentifier(facebookDataXri);
-			if (facebookUserId == null) return false;
-			if (facebookObjectIdentifier == null) return false;
-			if (facebookFieldIdentifier == null) return false;
+			if (facebookUserId == null) return new ContributorResult(true, false, true);
+			if (facebookObjectIdentifier == null) return new ContributorResult(true, false, true);
+			if (facebookFieldIdentifier == null) return new ContributorResult(true, false, true);
 
 			log.debug("facebookUserId: " + facebookUserId + ", facebookObjectIdentifier: " + facebookObjectIdentifier + ", facebookFieldIdentifier: " + facebookFieldIdentifier);
 
@@ -329,12 +331,12 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 				if (accessToken == null) {
 
 					log.warn("No access token for user ID: " + facebookUserIdXri);
-					return false;
+					return new ContributorResult(true, false, true);
 				}
 
 				JSONObject user = FacebookContributor.this.retrieveUser(executionContext, facebookUserId, accessToken);
 				if (user == null) throw new Exception("No user.");
-				if (! user.has(facebookFieldIdentifier)) return false;
+				if (! user.has(facebookFieldIdentifier)) return new ContributorResult(true, false, true);
 
 				facebookField = user.getString(facebookFieldIdentifier);
 			} catch (Exception ex) {
@@ -352,7 +354,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			// done
 
-			return false;
+			return new ContributorResult(true, false, true);
 		}
 	}
 
