@@ -30,13 +30,13 @@ import xdi2.messaging.exceptions.Xdi2MessagingException;
 import xdi2.messaging.target.MessagingTarget;
 import xdi2.messaging.target.Prototype;
 import xdi2.messaging.target.contributor.AbstractContributor;
+import xdi2.messaging.target.contributor.ContributorMount;
 import xdi2.messaging.target.contributor.ContributorResult;
-import xdi2.messaging.target.contributor.ContributorXri;
 import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
 import xdi2.messaging.target.interceptor.InterceptorResult;
 import xdi2.messaging.target.interceptor.MessageEnvelopeInterceptor;
 
-@ContributorXri(addresses={"(https://facebook.com/)"})
+@ContributorMount(contributorXris={"(https://facebook.com/)"})
 public class FacebookContributor extends AbstractContributor implements MessageEnvelopeInterceptor, Prototype<FacebookContributor> {
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookContributor.class);
@@ -122,7 +122,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	 * Sub-Contributors
 	 */
 
-	@ContributorXri(addresses={"<+enabled>"})
+	@ContributorMount(contributorXris={"<+enabled>"})
 	private class FacebookEnabledContributor extends AbstractContributor {
 
 		@Override
@@ -150,7 +150,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorXri(addresses={"[!]{!}"})
+	@ContributorMount(contributorXris={"[!]{!}"})
 	private class FacebookUserContributor extends AbstractContributor {
 
 		private FacebookUserContributor() {
@@ -211,7 +211,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorXri(addresses={"+(user)[+(friend)]"})
+	@ContributorMount(contributorXris={"+(user)[+(friend)]"})
 	private class FacebookUserFriendsContributor extends AbstractContributor {
 
 		private FacebookUserFriendsContributor() {
@@ -290,7 +290,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorXri(addresses={"+(user){+}"})
+	@ContributorMount(contributorXris={"+(user){+}"})
 	private class FacebookUserFieldContributor extends AbstractContributor {
 
 		private FacebookUserFieldContributor() {
