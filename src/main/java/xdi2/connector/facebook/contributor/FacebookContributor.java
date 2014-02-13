@@ -133,7 +133,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 			else
 				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral(Double.valueOf(0));
 
-			return new ContributorResult(false, false, true);
+			return ContributorResult.DEFAULT;
 		}
 
 		@Override
@@ -146,7 +146,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 			else
 				FacebookContributor.this.setEnabled(false);
 
-			return new ContributorResult(false, false, true);
+			return ContributorResult.SKIP_MESSAGING_TARGET;
 		}
 	}
 
@@ -207,7 +207,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			// done
 
-			return new ContributorResult(false, false, true);
+			return ContributorResult.SKIP_MESSAGING_TARGET;
 		}
 	}
 
