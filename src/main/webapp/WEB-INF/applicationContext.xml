@@ -35,13 +35,7 @@
 		<property name="facebookMapping" ref="facebookMapping" />
 	</bean>
 
-	<!-- MESSAGING TARGET at /graph -->
-	<!-- MessagingTarget: GraphMessagingTarget backed by a MemoryGraph -->
-
-	<bean id="graphfactory1" class="xdi2.core.impl.memory.MemoryGraphFactory">
-	</bean>
-
-	<bean id="graph1" factory-bean="graphfactory1" factory-method="openGraph" />
+	<!-- FACEBOOK CONNECTOR -->
 
 	<bean id="facebookMappingGraphfactory" class="xdi2.core.impl.wrapped.classpath.ClasspathWrapperGraphFactory">
 		<property name="classpath" value="/xdi2/connector/facebook/mapping/mapping.xdi" />
@@ -64,37 +58,53 @@
 		<property name="mappingGraph" ref="facebookMappingGraph" />
 	</bean>
 
+	<!-- MESSAGING TARGET at /graph -->
+	<!-- MessagingTarget: GraphMessagingTarget backed by a MemoryGraph -->
+
+	<bean id="graphfactory1" class="xdi2.core.impl.memory.MemoryGraphFactory">
+	</bean>
+
+	<bean id="graph1" factory-bean="graphfactory1" factory-method="openGraph">
+		<constructor-arg><value>([=]!:uuid:1111)</value></constructor-arg>
+	</bean>
+
 	<bean name="/graph" class="xdi2.messaging.target.impl.graph.GraphMessagingTarget">
 		<property name="graph" ref="graph1" />
 		<property name="interceptors">
 			<util:list>
 				<bean class="xdi2.messaging.target.interceptor.impl.BootstrapInterceptor">
-					<property name="bootstrapOwner" value="[=]!1111" />
+					<property name="bootstrapOwner" value="[=]!:uuid:1111" />
+					<property name="bootstrapOwnerSynonyms">
+						<util:list>
+							<value>=alice</value>
+						</util:list>
+					</property>
 					<property name="bootstrapRootLinkContract" value="true" />
 					<property name="bootstrapPublicLinkContract" value="true" />
-				</bean>
-				<bean class="xdi2.messaging.target.interceptor.impl.VariablesInterceptor" />
-				<bean class="xdi2.messaging.target.interceptor.impl.RefInterceptor" />
-				<bean class="xdi2.messaging.target.interceptor.impl.ToInterceptor" />
-				<bean class="xdi2.messaging.target.interceptor.impl.authentication.secrettoken.AuthenticationSecretTokenInterceptor">
-					<property name="secretTokenAuthenticator">
-						<bean class="xdi2.messaging.target.interceptor.impl.authentication.secrettoken.StaticSecretTokenAuthenticator">
-							<property name="globalSalt" value="00000000-0000-0000-0000-000000000000" />
-							<property name="localSaltAndDigestSecretTokens">
-								<util:map>
-									<entry key="[=]!1111" value="xdi2-digest:00000000-0000-0000-0000-000000000000:a7292f2347aef29a9e4c05d35764019106143a339b6e9bb39faee53103e1d6f55e49213d77d16a326a91bab0fc6885779d04e2e4470125720860cf54f872b3bb" />
-								</util:map>
-							</property>
-						</bean>
+					<property name="bootstrapGraph">
+						<value>
+							{$self}$to$anon$from$public$do/$get/{$self}$msg$encrypt$keypair&lt;$public&gt;&lt;$key&gt;
+							{$self}$to$anon$from$public$do/$get/({$self}$msg$encrypt$keypair/$is#/{})
+							{$self}$to$anon$from$public$do/$get/{$self}$msg$sig$keypair&lt;$public&gt;&lt;$key&gt;
+							{$self}$to$anon$from$public$do/$get/({$self}$msg$sig$keypair/$is#/{})
+						</value>
+					</property>
+					<property name="bootstrapMessageEnvelope">
+						<value>
+							$anon[$msg]!1$do/$do$keypair/({$self}$msg$encrypt$keypair/$is#/$rsa$2048)
+							$anon[$msg]!1$do/$do$keypair/({$self}$msg$sig$keypair/$is#/$rsa$2048)
+						</value>
 					</property>
 				</bean>
+				<bean class="xdi2.messaging.target.interceptor.impl.RefInterceptor" />
 				<ref bean="facebookContributor" />
 			</util:list>
 		</property>
 		<property name="contributors">
-			<util:map>
-				<entry key="(https://facebook.com/)" value-ref="facebookContributor" />
-			</util:map>
+			<util:list>
+				<bean id="generateKeyContributor" class="xdi2.messaging.target.contributor.impl.keygen.GenerateKeyContributor" />
+				<ref bean="facebookContributor" />
+			</util:list>
 		</property>
 	</bean>
 
