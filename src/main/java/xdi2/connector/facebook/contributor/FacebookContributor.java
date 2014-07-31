@@ -13,18 +13,15 @@ import xdi2.connector.facebook.mapping.FacebookMapping;
 import xdi2.connector.facebook.util.GraphUtil;
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
-import xdi2.core.constants.XDIConstants;
 import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.features.nodetypes.XdiAbstractAttribute;
 import xdi2.core.features.nodetypes.XdiAttributeSingleton;
 import xdi2.core.features.nodetypes.XdiEntityCollection;
 import xdi2.core.features.nodetypes.XdiEntityMemberOrdered;
 import xdi2.core.xri3.XDI3Segment;
-import xdi2.core.xri3.XDI3Statement;
 import xdi2.messaging.GetOperation;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
-import xdi2.messaging.SetOperation;
 import xdi2.messaging.context.ExecutionContext;
 import xdi2.messaging.exceptions.Xdi2MessagingException;
 import xdi2.messaging.target.MessagingTarget;
@@ -53,7 +50,6 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		this.facebookMapping = null;
 		this.tokenGraph = null;
 
-		this.getContributors().addContributor(new FacebookEnabledContributor());
 		this.getContributors().addContributor(new FacebookUserContributor());
 	}
 
@@ -122,34 +118,6 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	 * Sub-Contributors
 	 */
 
-	@ContributorMount(contributorXris={"<+enabled>"})
-	private class FacebookEnabledContributor extends AbstractContributor {
-
-		@Override
-		public ContributorResult executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
-
-			if (FacebookContributor.this.isEnabled())
-				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral(Double.valueOf(1));
-			else
-				messageResult.getGraph().setDeepContextNode(contributorsXri).setContextNode(XDIConstants.XRI_SS_LITERAL).setLiteral(Double.valueOf(0));
-
-			return ContributorResult.DEFAULT;
-		}
-
-		@Override
-		public ContributorResult executeSetOnLiteralStatement(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Statement relativeTargetStatement, SetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
-
-			Object literalData = relativeTargetStatement.getLiteralData();
-
-			if (Integer.valueOf(1).equals(literalData))
-				FacebookContributor.this.setEnabled(true);
-			else
-				FacebookContributor.this.setEnabled(false);
-
-			return ContributorResult.SKIP_MESSAGING_TARGET;
-		}
-	}
-
 	@ContributorMount(contributorXris={"[!]{!}"})
 	private class FacebookUserContributor extends AbstractContributor {
 
@@ -211,7 +179,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorMount(contributorXris={"+(user)[+(friend)]"})
+	@ContributorMount(contributorXris={"#(user)[#(friend)]"})
 	private class FacebookUserFriendsContributor extends AbstractContributor {
 
 		private FacebookUserFriendsContributor() {
@@ -276,7 +244,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 					XDI3Segment facebookFriendXri = XDI3Segment.create("[!]!" + facebookFriendId);
 					ContextNode facebookFriendContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + facebookFriendXri));
-					facebookFriendContextNode.setDeepContextNode(XDI3Segment.create("<+name>&")).setLiteral(facebookFriendName);
+					facebookFriendContextNode.setDeepContextNode(XDI3Segment.create("<#name>&")).setLiteral(facebookFriendName);
 
 					XdiEntityMemberOrdered friendXdiEntityMemberOrdered = friendXdiEntityCollection.setXdiMemberOrdered(-1);
 
@@ -290,7 +258,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorMount(contributorXris={"+(user){+}"})
+	@ContributorMount(contributorXris={"#(user){#}"})
 	private class FacebookUserFieldContributor extends AbstractContributor {
 
 		private FacebookUserFieldContributor() {
@@ -308,7 +276,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + facebookUserIdXri + ", facebookDataXri: " + facebookDataXri);
 
 			if (facebookUserIdXri.equals("[!]{!}")) return ContributorResult.DEFAULT;
-			if (facebookDataXri.equals("{+}")) return ContributorResult.DEFAULT;
+			if (facebookDataXri.equals("{#}")) return ContributorResult.DEFAULT;
 
 			// parse identifiers
 
