@@ -183,7 +183,6 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 		request.setAttribute("resultFormat", XDIDisplayWriter.FORMAT_NAME);
 		request.setAttribute("writeImplied", null);
 		request.setAttribute("writeOrdered", "on");
-		request.setAttribute("writeInner", "on");
 		request.setAttribute("writePretty", null);
 		request.setAttribute("input", sampleInput);
 		request.setAttribute("endpoint", request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/")) + sampleEndpoint);
@@ -197,7 +196,6 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 		String resultFormat = request.getParameter("resultFormat");
 		String writeImplied = request.getParameter("writeImplied");
 		String writeOrdered = request.getParameter("writeOrdered");
-		String writeInner = request.getParameter("writeInner");
 		String writePretty = request.getParameter("writePretty");
 		String input = request.getParameter("input");
 		String endpoint = request.getParameter("endpoint");
@@ -274,7 +272,6 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 		request.setAttribute("resultFormat", resultFormat);
 		request.setAttribute("writeImplied", writeImplied);
 		request.setAttribute("writeOrdered", writeOrdered);
-		request.setAttribute("writeInner", writeInner);
 		request.setAttribute("writePretty", writePretty);
 		request.setAttribute("input", input);
 		request.setAttribute("endpoint", endpoint);
