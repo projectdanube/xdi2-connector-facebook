@@ -27,8 +27,8 @@ public class FacebookMappingTest extends TestCase {
 
 	public void testMapping() throws Exception {
 
-		XDI3Segment facebookDataXri = XDI3Segment.create("+(user)<+(first_name)>");
-		XDI3Segment xdiDataXri = XDI3Segment.create("+first<+name>");
+		XDI3Segment facebookDataXri = XDI3Segment.create("#(user)<#(first_name)>");
+		XDI3Segment xdiDataXri = XDI3Segment.create("#first<#name>");
 
 		assertEquals("user", this.facebookMapping.facebookDataXriToFacebookObjectIdentifier(facebookDataXri));
 		assertEquals("first_name", this.facebookMapping.facebookDataXriToFacebookFieldIdentifier(facebookDataXri));
