@@ -18,7 +18,7 @@ import xdi2.core.features.nodetypes.XdiAbstractAttribute;
 import xdi2.core.features.nodetypes.XdiAttributeSingleton;
 import xdi2.core.features.nodetypes.XdiEntityCollection;
 import xdi2.core.features.nodetypes.XdiEntityMemberOrdered;
-import xdi2.core.xri3.XDI3Segment;
+import xdi2.core.syntax.XDIAddress;
 import xdi2.messaging.GetOperation;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
@@ -33,7 +33,7 @@ import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
 import xdi2.messaging.target.interceptor.InterceptorResult;
 import xdi2.messaging.target.interceptor.MessageEnvelopeInterceptor;
 
-@ContributorMount(contributorXris={"(https://facebook.com/)"})
+@ContributorMount(contributorAddresses={"(https://facebook.com/)"})
 public class FacebookContributor extends AbstractContributor implements MessageEnvelopeInterceptor, Prototype<FacebookContributor> {
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookContributor.class);
@@ -118,7 +118,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	 * Sub-Contributors
 	 */
 
-	@ContributorMount(contributorXris={"[!]{!}"})
+	@ContributorMount(contributorAddresses={"[!]{!}"})
 	private class FacebookUserContributor extends AbstractContributor {
 
 		private FacebookUserContributor() {
@@ -130,10 +130,10 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 
 		@Override
-		public ContributorResult executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public ContributorResult executeGetOnAddress(XDIAddress[] contributorAddresses, XDIAddress contributorsXri, XDIAddress relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 2];
-			XDI3Segment userIdXri = contributorXris[contributorXris.length - 1];
+			XDIAddress facebookContextXri = contributorAddresses[contributorAddresses.length - 2];
+			XDIAddress userIdXri = contributorAddresses[contributorAddresses.length - 1];
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + userIdXri);
 
@@ -165,9 +165,9 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			if (facebookUserId != null) {
 
-				XDI3Segment facebookUserXri = XDI3Segment.create("[!]!" + facebookUserId);
+				XDIAddress facebookUserXri = XDIAddress.create("[!]!" + facebookUserId);
 
-				ContextNode facebookUserContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + facebookUserXri));
+				ContextNode facebookUserContextNode = messageResult.getGraph().setDeepContextNode(XDIAddress.create("" + facebookContextXri + facebookUserXri));
 				ContextNode userContextNode = messageResult.getGraph().setDeepContextNode(contributorsXri);
 
 				Equivalence.addIdentityContextNode(userContextNode, facebookUserContextNode);
@@ -179,7 +179,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorMount(contributorXris={"#(user)[#(friend)]"})
+	@ContributorMount(contributorAddresses={"#(user)[#(friend)]"})
 	private class FacebookUserFriendsContributor extends AbstractContributor {
 
 		private FacebookUserFriendsContributor() {
@@ -188,10 +188,10 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 
 		@Override
-		public ContributorResult executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public ContributorResult executeGetOnAddress(XDIAddress[] contributorAddresses, XDIAddress contributorsXri, XDIAddress relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
-			XDI3Segment userIdXri = contributorXris[contributorXris.length - 2];
+			XDIAddress facebookContextXri = contributorAddresses[contributorAddresses.length - 3];
+			XDIAddress userIdXri = contributorAddresses[contributorAddresses.length - 2];
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + userIdXri);
 
@@ -242,9 +242,9 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 						throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);
 					}
 
-					XDI3Segment facebookFriendXri = XDI3Segment.create("[!]!" + facebookFriendId);
-					ContextNode facebookFriendContextNode = messageResult.getGraph().setDeepContextNode(XDI3Segment.create("" + facebookContextXri + facebookFriendXri));
-					facebookFriendContextNode.setDeepContextNode(XDI3Segment.create("<#name>&")).setLiteral(facebookFriendName);
+					XDIAddress facebookFriendXri = XDIAddress.create("[!]!" + facebookFriendId);
+					ContextNode facebookFriendContextNode = messageResult.getGraph().setDeepContextNode(XDIAddress.create("" + facebookContextXri + facebookFriendXri));
+					facebookFriendContextNode.setDeepContextNode(XDIAddress.create("<#name>&")).setLiteral(facebookFriendName);
 
 					XdiEntityMemberOrdered friendXdiEntityMemberOrdered = friendXdiEntityCollection.setXdiMemberOrdered(-1);
 
@@ -258,7 +258,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorMount(contributorXris={"#(user){#}"})
+	@ContributorMount(contributorAddresses={"#(user){#}"})
 	private class FacebookUserFieldContributor extends AbstractContributor {
 
 		private FacebookUserFieldContributor() {
@@ -267,11 +267,11 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 
 		@Override
-		public ContributorResult executeGetOnAddress(XDI3Segment[] contributorXris, XDI3Segment contributorsXri, XDI3Segment relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
+		public ContributorResult executeGetOnAddress(XDIAddress[] contributorAddresses, XDIAddress contributorsXri, XDIAddress relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
-			XDI3Segment facebookContextXri = contributorXris[contributorXris.length - 3];
-			XDI3Segment facebookUserIdXri = contributorXris[contributorXris.length - 2];
-			XDI3Segment facebookDataXri = contributorXris[contributorXris.length - 1];
+			XDIAddress facebookContextXri = contributorAddresses[contributorAddresses.length - 3];
+			XDIAddress facebookUserIdXri = contributorAddresses[contributorAddresses.length - 2];
+			XDIAddress facebookDataXri = contributorAddresses[contributorAddresses.length - 1];
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + facebookUserIdXri + ", facebookDataXri: " + facebookDataXri);
 

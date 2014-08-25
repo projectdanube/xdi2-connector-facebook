@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xdi2.core.xri3.XDI3Segment;
+import xdi2.core.syntax.XDIAddress;
 
 public class FacebookApi {
 
@@ -55,7 +55,7 @@ public class FacebookApi {
 
 	}
 
-	public String startOAuth(HttpServletRequest request, String redirectUri, XDI3Segment userXri) throws IOException {
+	public String startOAuth(HttpServletRequest request, String redirectUri, XDIAddress userXri) throws IOException {
 
 		String clientId = this.getAppId();
 		if (redirectUri == null) redirectUri = uriWithoutQuery(request.getRequestURL().toString());
@@ -78,7 +78,7 @@ public class FacebookApi {
 		return location.toString();
 	}
 
-	public void checkState(Map<?, ?> parameterMap, XDI3Segment userXri) throws IOException {
+	public void checkState(Map<?, ?> parameterMap, XDIAddress userXDIAddress) throws IOException {
 
 		String state = parameterMap.containsKey("state") ? ((String[]) parameterMap.get("state"))[0] : null;
 
@@ -88,7 +88,7 @@ public class FacebookApi {
 			return;
 		}
 
-		if (! userXri.toString().equals(state)) throw new IOException("Invalid state: " + state);
+		if (! userXDIAddress.toString().equals(state)) throw new IOException("Invalid state: " + state);
 
 		log.debug("State OK");
 	}
