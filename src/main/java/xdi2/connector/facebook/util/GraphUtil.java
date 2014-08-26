@@ -8,31 +8,31 @@ import xdi2.core.constants.XDIAuthenticationConstants;
 import xdi2.core.constants.XDIConstants;
 import xdi2.core.constants.XDIDictionaryConstants;
 import xdi2.core.features.equivalence.Equivalence;
-import xdi2.core.xri3.XDI3Segment;
+import xdi2.core.syntax.XDIAddress;
 
 public class GraphUtil {
 
 	private GraphUtil() { }
 
-	public static String retrieveAccessToken(Graph graph, XDI3Segment userXri) {
+	public static String retrieveAccessToken(Graph graph, XDIAddress userXri) {
 
-		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri + XDIAuthenticationConstants.XRI_S_OAUTH_TOKEN + XDIConstants.XRI_S_VALUE);
+		XDIAddress contextNodeXri = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + userXri + XDIAuthenticationConstants.XDI_ADD_OAUTH_TOKEN + XDIConstants.XDI_ADD_VALUE);
 
 		Literal literal = graph.getDeepLiteral(contextNodeXri);
 
 		return literal == null ? null : literal.getLiteralDataString();
 	}
 
-	public static void storeFacebookAccessToken(Graph graph, XDI3Segment facebookUserIdXri, String facebookAccessToken) {
+	public static void storeFacebookAccessToken(Graph graph, XDIAddress facebookUserIdXri, String facebookAccessToken) {
 
-		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XRI_S_OAUTH_TOKEN + XDIConstants.XRI_S_VALUE);
+		XDIAddress contextNodeXri = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XDI_ADD_OAUTH_TOKEN + XDIConstants.XDI_ADD_VALUE);
 
 		graph.setDeepLiteral(contextNodeXri, facebookAccessToken);
 	}
 
-	public static void removeAccessToken(Graph graph, XDI3Segment facebookUserIdXri) {
+	public static void removeAccessToken(Graph graph, XDIAddress facebookUserIdXri) {
 
-		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XRI_S_OAUTH_TOKEN + XDIConstants.XRI_S_VALUE);
+		XDIAddress contextNodeXri = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XDI_ADD_OAUTH_TOKEN + XDIConstants.XDI_ADD_VALUE);
 
 		ContextNode contextNode = graph.getDeepContextNode(contextNodeXri);
 		if (contextNode == null) return;
@@ -40,21 +40,21 @@ public class GraphUtil {
 		contextNode.delete();
 	}
 
-	public static void storeFacebookUserIdXri(Graph graph, XDI3Segment userXri, XDI3Segment facebookUserIdXri) {
+	public static void storeFacebookUserIdXri(Graph graph, XDIAddress userXri, XDIAddress facebookUserIdXri) {
 
-		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + userXri);
-		XDI3Segment targetContextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + facebookUserIdXri);
+		XDIAddress contextNodeXri = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + userXri);
+		XDIAddress targetContextNodeXri = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + facebookUserIdXri);
 
 		Equivalence.setReferenceContextNode(graph.setDeepContextNode(contextNodeXri), graph.setDeepContextNode(targetContextNodeXri));
 	}
 
-	public static void removeFacebookUserIdXri(Graph graph, XDI3Segment facebookUserIdXri) {
+	public static void removeFacebookUserIdXri(Graph graph, XDIAddress facebookUserIdXri) {
 
-		XDI3Segment contextNodeXri = XDI3Segment.create("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + facebookUserIdXri);
+		XDIAddress contextNodeXri = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + facebookUserIdXri);
 
 		ContextNode contextNode = graph.getDeepContextNode(contextNodeXri);
 		if (contextNode == null) return;
 
-		contextNode.delRelations(XDIDictionaryConstants.XRI_S_REF);
+		contextNode.delRelations(XDIDictionaryConstants.XDI_ADD_REF);
 	}
 }

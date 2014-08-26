@@ -30,7 +30,7 @@ import xdi2.core.io.XDIReaderRegistry;
 import xdi2.core.io.XDIWriter;
 import xdi2.core.io.XDIWriterRegistry;
 import xdi2.core.io.writers.XDIDisplayWriter;
-import xdi2.core.xri3.XDI3Segment;
+import xdi2.core.syntax.XDIAddress;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
 
@@ -99,7 +99,7 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
 		if ("Request Access Token!".equals(request.getParameter("submit"))) {
 
-			XDI3Segment userXri = XDI3Segment.create(request.getParameter("userXri"));
+			XDIAddress userXri = XDIAddress.create(request.getParameter("userXri"));
 			request.getSession().setAttribute("userXri", userXri);
 
 			try {
@@ -116,7 +116,7 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
 		if ("Revoke Access Token!".equals(request.getParameter("submit"))) {
 
-			XDI3Segment userXri = XDI3Segment.create(request.getParameter("userXri"));
+			XDIAddress userXri = XDIAddress.create(request.getParameter("userXri"));
 			request.getSession().setAttribute("userXri", userXri);
 
 			try {
@@ -125,7 +125,7 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 				if (facebookAccessToken == null) throw new Exception("No access token in graph.");
 
 				String facebookUserId = this.getFacebookApi().retrieveUserId(facebookAccessToken);
-				XDI3Segment facebookUserIdXri = this.getFacebookMapping().facebookUserIdToFacebookUserIdXri(facebookUserId);
+				XDIAddress facebookUserIdXri = this.getFacebookMapping().facebookUserIdToFacebookUserIdXri(facebookUserId);
 
 				this.getFacebookApi().revokeAccessToken(facebookAccessToken);
 
@@ -154,7 +154,7 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
 		if (request.getParameter("code") != null) {
 
-			XDI3Segment userXri = (XDI3Segment) request.getSession().getAttribute("userXri");
+			XDIAddress userXri = (XDIAddress) request.getSession().getAttribute("userXri");
 
 			try {
 
@@ -164,7 +164,7 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 				if (facebookAccessToken == null) throw new Exception("No access token received.");
 
 				String facebookUserId = this.getFacebookApi().retrieveUserId(facebookAccessToken);
-				XDI3Segment facebookUserIdXri = this.getFacebookMapping().facebookUserIdToFacebookUserIdXri(facebookUserId);
+				XDIAddress facebookUserIdXri = this.getFacebookMapping().facebookUserIdToFacebookUserIdXri(facebookUserId);
 
 				GraphUtil.storeFacebookUserIdXri(this.getGraph(), userXri, facebookUserIdXri);
 				GraphUtil.storeFacebookAccessToken(this.getGraph(), facebookUserIdXri, facebookAccessToken);
