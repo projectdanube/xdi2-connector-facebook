@@ -121,18 +121,19 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
 			try {
 
-				String facebookAccessToken = GraphUtil.retrieveAccessToken(this.getGraph(), userXri);
-				if (facebookAccessToken == null) throw new Exception("No access token in graph.");
+				XDIAddress facebookUserIdXri = GraphUtil.retrieveFacebookUserIdXri(this.getGraph(), userXri);
+				if (facebookUserIdXri == null) throw new Exception("No user ID in graph.");
 
-				String facebookUserId = this.getFacebookApi().retrieveUserId(facebookAccessToken);
-				XDIAddress facebookUserIdXri = this.getFacebookMapping().facebookUserIdToFacebookUserIdXri(facebookUserId);
+				System.err.println(facebookUserIdXri);
+				String facebookAccessToken = GraphUtil.retrieveFacebookAccessToken(this.getGraph(), facebookUserIdXri);
+				if (facebookAccessToken == null) throw new Exception("No access token in graph.");
 
 				this.getFacebookApi().revokeAccessToken(facebookAccessToken);
 
-				GraphUtil.removeAccessToken(this.getGraph(), facebookUserIdXri);
-				GraphUtil.removeFacebookUserIdXri(this.getGraph(), facebookUserIdXri);
+				GraphUtil.removeFacebookAccessToken(this.getGraph(), facebookUserIdXri);
+				GraphUtil.removeFacebookUserIdXri(this.getGraph(), userXri);
 
-				request.setAttribute("feedback", "Access token successfully revoked and removed from graph.");
+				request.setAttribute("feedback", "OAuth access token successfully revoked and removed from graph.");
 			} catch (Exception ex) {
 
 				request.setAttribute("error", ex.getMessage());

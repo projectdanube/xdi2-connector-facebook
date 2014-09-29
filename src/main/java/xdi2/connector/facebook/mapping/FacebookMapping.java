@@ -45,7 +45,7 @@ public class FacebookMapping {
 
 	/**
 	 * Converts a Facebook user ID XRI to a native Facebook user ID.
-	 * Example: [!]!588183713 --> 588183713
+	 * Example: [=]!588183713 --> 588183713
 	 */
 	public String facebookUserIdXriToFacebookUserId(XDIAddress facebookUserIdXri) {
 
@@ -64,7 +64,7 @@ public class FacebookMapping {
 
 	/**
 	 * Converts a native Facebook user ID to a Facebook user ID XRI.
-	 * Example: 588183713 --> [!]!588183713
+	 * Example: 588183713 --> [=]!588183713
 	 */
 	public XDIAddress facebookUserIdToFacebookUserIdXri(String facebookUserId) {
 
@@ -72,7 +72,7 @@ public class FacebookMapping {
 
 		// convert
 
-		XDIAddress facebookUserIdXri = XDIAddress.create("[!]!" + facebookUserId);
+		XDIAddress facebookUserIdXri = XDIAddress.create("[=]!" + facebookUserId);
 
 		// done
 

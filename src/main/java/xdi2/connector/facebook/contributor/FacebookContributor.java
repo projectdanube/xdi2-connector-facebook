@@ -118,7 +118,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	 * Sub-Contributors
 	 */
 
-	@ContributorMount(contributorAddresses={"[!]{!}"})
+	@ContributorMount(contributorAddresses={"[=]{!}"})
 	private class FacebookUserContributor extends AbstractContributor {
 
 		private FacebookUserContributor() {
@@ -137,7 +137,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + userIdXri);
 
-			if (userIdXri.equals("[!]{!}")) return ContributorResult.DEFAULT;
+			if (userIdXri.equals("[=]{!}")) return ContributorResult.DEFAULT;
 
 			// retrieve the Facebook user ID
 
@@ -165,7 +165,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			if (facebookUserId != null) {
 
-				XDIAddress facebookUserXri = XDIAddress.create("[!]!" + facebookUserId);
+				XDIAddress facebookUserXri = XDIAddress.create("[=]!" + facebookUserId);
 
 				ContextNode facebookUserContextNode = messageResult.getGraph().setDeepContextNode(XDIAddress.create("" + facebookContextXri + facebookUserXri));
 				ContextNode userContextNode = messageResult.getGraph().setDeepContextNode(contributorsXri);
@@ -175,7 +175,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			// done
 
-			return ContributorResult.SKIP_MESSAGING_TARGET;
+			return ContributorResult.DEFAULT;
 		}
 	}
 
@@ -191,11 +191,11 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		public ContributorResult executeGetOnAddress(XDIAddress[] contributorAddresses, XDIAddress contributorsXri, XDIAddress relativeTargetAddress, GetOperation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 			XDIAddress facebookContextXri = contributorAddresses[contributorAddresses.length - 3];
-			XDIAddress userIdXri = contributorAddresses[contributorAddresses.length - 2];
+			XDIAddress facebookUserIdXri = contributorAddresses[contributorAddresses.length - 2];
 
-			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + userIdXri);
+			log.debug("facebookContextXri: " + facebookContextXri + ", facebookUserIdXri: " + facebookUserIdXri);
 
-			if (userIdXri.equals("[!]{!}")) return ContributorResult.DEFAULT;
+			if (facebookUserIdXri.equals("[=]{!}")) return ContributorResult.DEFAULT;
 
 			// retrieve the Facebook friends
 
@@ -203,10 +203,10 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			try {
 
-				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), userIdXri);
+				String accessToken = GraphUtil.retrieveFacebookAccessToken(FacebookContributor.this.getTokenGraph(), facebookUserIdXri);
 				if (accessToken == null) {
 
-					log.warn("No access token for user XRI: " + userIdXri);
+					log.warn("No access token for user ID: " + facebookUserIdXri);
 					return new ContributorResult(true, false, true);
 				}
 
@@ -242,7 +242,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 						throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);
 					}
 
-					XDIAddress facebookFriendXri = XDIAddress.create("[!]!" + facebookFriendId);
+					XDIAddress facebookFriendXri = XDIAddress.create("[=]!" + facebookFriendId);
 					ContextNode facebookFriendContextNode = messageResult.getGraph().setDeepContextNode(XDIAddress.create("" + facebookContextXri + facebookFriendXri));
 					facebookFriendContextNode.setDeepContextNode(XDIAddress.create("<#name>&")).setLiteral(facebookFriendName);
 
@@ -275,7 +275,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + facebookUserIdXri + ", facebookDataXri: " + facebookDataXri);
 
-			if (facebookUserIdXri.equals("[!]{!}")) return ContributorResult.DEFAULT;
+			if (facebookUserIdXri.equals("[=]{!}")) return ContributorResult.DEFAULT;
 			if (facebookDataXri.equals("{#}")) return ContributorResult.DEFAULT;
 
 			// parse identifiers
@@ -295,7 +295,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			try {
 
-				String accessToken = GraphUtil.retrieveAccessToken(FacebookContributor.this.getTokenGraph(), facebookUserIdXri);
+				String accessToken = GraphUtil.retrieveFacebookAccessToken(FacebookContributor.this.getTokenGraph(), facebookUserIdXri);
 				if (accessToken == null) {
 
 					log.warn("No access token for user ID: " + facebookUserIdXri);

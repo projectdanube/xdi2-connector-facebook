@@ -6,13 +6,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>xdi2-connector-facebook</title>
 <link rel="stylesheet" target="_blank" href="style.css" TYPE="text/css" MEDIA="screen">
+<link rel="shortcut icon" href="favicon.ico" />
+<style type="text/css">
+div.header { padding-top: 5px; padding-bottom: 35px; }
+</style>
 </head>
-<body style="background-image: url('images/back.png'); background-repeat: repeat-y; margin-left: 60px;">
-
+<body>
+	<div id="imgtop"><img id="imgtopleft" src="images/xdi2-topleft.png"><img id="imgtopright" src="images/xdi2-topright.png"></div>
+	<div id="main">
 	<div class="header">
-	<img src="images/logo64.png" align="middle">&nbsp;&nbsp;&nbsp;
-	<img src="images/arrow.png" align="middle">&nbsp;&nbsp;&nbsp;
-	<img src="images/facebook-logo.png" align="middle">&nbsp;&nbsp;&nbsp;<span id="appname">xdi2-connector-facebook</span>
+	<table cellpadding="5"><tr><td><img src="images/arrow.png" align="middle"></td><td><img src="images/facebook-logo.png" align="middle"></td><td><span id="appname">xdi2-connector-facebook</span></td></tr></table>
 	</div>
 
 	<% if (request.getAttribute("error") != null) { %>
@@ -23,7 +26,7 @@
 
 	<% if (request.getAttribute("feedback") != null) { %>
 
-		<p><font color="#5e1bda"><%= request.getAttribute("feedback") != null ? request.getAttribute("feedback") : "" %></font></p>
+		<p style="font-family: monospace; white-space: pre; color: #5e1bda;"><%= request.getAttribute("feedback") != null ? request.getAttribute("feedback") : "" %></p>
 
 	<% } %>
 
@@ -38,22 +41,33 @@
 	<tr>
 	
 	<td><img src="images/oauth2-logo.png" align="middle" style="float:left;padding-right:10px;"></td>
-	<td>I-Number: <input type="text" name="userXri" value="[=]!1111"></td>
+	<td>Cloud Number: <input type="text" name="userXri" value="[=]!1111"></td>
 	<td><input type="submit" name="submit" value="Request Access Token!"></td>
 	<td><input type="submit" name="submit" value="Revoke Access Token!"></td>
 
 	</tr>
 	</table>
 	
-	</form>
+	</form><br>
+
+	<div class="line"></div>
+
+	<p class="subheader">XDI Server</p>
+	<p>
+	<table cellpadding="5"><tr>
+	<td>Click here to access the local XDI server: <a href="<%= request.getRequestURL().substring(0, request.getRequestURL().toString().lastIndexOf('/')) %>/xdi/"><%= request.getRequestURL().substring(0, request.getRequestURL().toString().lastIndexOf('/')) %>/xdi/</a></td>
+	</tr></table>
+	</p>
+	
+	<div class="line"></div>
 
 	<p class="subheader">Send a Message to my XDI Endpoint</p>
 
-	<p>Certain parts of your graph will only be accessible if you have a Facebook API access token.</p>
+	<p>Make sure you have a Facebook API Access Token in the graph, before sending this XDI message.</p>
 
 	<form action="client" method="post" accept-charset="UTF-8">
 
-		<textarea name="input" style="width: 100%" rows="12"><%= request.getAttribute("input") != null ? request.getAttribute("input") : "" %></textarea><br>
+		<textarea class="input" name="input" style="width: 100%" rows="12"><%= request.getAttribute("input") != null ? request.getAttribute("input") : "" %></textarea><br>
 
 		<% String resultFormat = (String) request.getAttribute("resultFormat"); if (resultFormat == null) resultFormat = ""; %>
 		<% String writeImplied = (String) request.getAttribute("writeImplied"); if (writeImplied == null) writeImplied = ""; %>
@@ -61,8 +75,10 @@
 		<% String writePretty = (String) request.getAttribute("writePretty"); if (writePretty == null) writePretty = ""; %>
 		<% String endpoint = (String) request.getAttribute("endpoint"); if (endpoint == null) endpoint = ""; %>
 
+		<p>
 		Send to endpoint: 
 		<input type="text" name="endpoint" size="80" value="<%= endpoint %>">
+		</p>
 
 		Result Format:
 		<select name="resultFormat">
@@ -95,5 +111,6 @@
 		<div class="result"><pre><%= request.getAttribute("output") != null ? request.getAttribute("output") : "" %></pre></div><br>
 	<% } %>
 
+	</div>
 </body>
 </html>
