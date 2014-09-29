@@ -21,9 +21,9 @@ After that, just run
 
 To build all components.
 
-### How to run
+### How to run as standalone web application
 
-    mvn jetty:run
+    mvn clean install jetty:run -P war
 
 Then access the web interface at
 
