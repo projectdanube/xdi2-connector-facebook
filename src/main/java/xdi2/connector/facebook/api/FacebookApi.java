@@ -59,14 +59,14 @@ public class FacebookApi {
 
 		String clientId = this.getAppId();
 		if (redirectUri == null) redirectUri = uriWithoutQuery(request.getRequestURL().toString());
-		String scope = "email";
+		String scope = "email user_friends";
 		String state = userXri.toString();
 
 		// prepare redirect
 
 		log.debug("Starting OAuth...");
 
-		StringBuffer location = new StringBuffer("https://www.facebook.com/dialog/oauth/?");
+		StringBuffer location = new StringBuffer("https://www.facebook.com/v2.0/dialog/oauth/?");
 		location.append("client_id=" + URLEncoder.encode(clientId, "UTF-8"));
 		location.append("&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8"));
 		location.append("&scope=" + URLEncoder.encode(scope, "UTF-8"));
@@ -104,7 +104,7 @@ public class FacebookApi {
 
 		// send request
 
-		StringBuffer location = new StringBuffer("https://graph.facebook.com/oauth/access_token?");
+		StringBuffer location = new StringBuffer("https://graph.facebook.com/v2.0/oauth/access_token?");
 		location.append("client_id=" + URLEncoder.encode(clientId, "UTF-8"));
 		location.append("&client_secret=" + URLEncoder.encode(clientSecret, "UTF-8"));
 		location.append("&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8"));
@@ -142,7 +142,7 @@ public class FacebookApi {
 
 		// send request
 
-		StringBuffer location = new StringBuffer("https://graph.facebook.com/me/permissions?");
+		StringBuffer location = new StringBuffer("https://graph.facebook.com/v2.0/me/permissions?");
 		location.append("access_token=" + accessToken);
 
 		HttpClient httpClient = new DefaultHttpClient();
@@ -174,7 +174,7 @@ public class FacebookApi {
 
 		// send request
 
-		StringBuffer location = new StringBuffer("https://graph.facebook.com/" + facebookUserId + "?");
+		StringBuffer location = new StringBuffer("https://graph.facebook.com/v2.0/" + facebookUserId + "?");
 		location.append("access_token=" + accessToken);
 		if (fields != null) location.append("&fields=" + fields);
 

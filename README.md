@@ -19,7 +19,7 @@ After that, just run
 
     mvn clean install
 
-To build all components.
+To build the XDI2 plugin.
 
 ### How to run as standalone web application
 
@@ -29,15 +29,13 @@ Then access the web interface at
 
 	http://localhost:9091/
 
+Or access the server's status page at
+
+	http://localhost:9091/xdi
+
 Or use an XDI client to send XDI messages to
 
     http://localhost:9091/xdi/facebook
-
-### How to build as XDI2 plugin
-
-Run
-
-    mvn clean install package -P xdi2-plugin
 
 ### Community
 
