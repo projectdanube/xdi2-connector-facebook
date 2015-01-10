@@ -81,6 +81,11 @@ public class FacebookApi {
 	public void checkState(Map<?, ?> parameterMap, XDIAddress userXDIAddress) throws IOException {
 
 		String state = parameterMap.containsKey("state") ? ((String[]) parameterMap.get("state"))[0] : null;
+		
+		checkState(state, userXDIAddress);
+	}
+	
+	public void checkState(String state, XDIAddress userXDIAddress) throws IOException {
 
 		if (state == null) {
 
@@ -95,10 +100,16 @@ public class FacebookApi {
 
 	public String exchangeCodeForAccessToken(String requestURL, Map<?, ?> parameterMap) throws IOException, HttpException {
 
+		String code = parameterMap.containsKey("code") ? ((String[]) parameterMap.get("code"))[0] : null;
+
+		return exchangeCodeForAccessToken(requestURL, code);
+	}
+	
+	public String exchangeCodeForAccessToken(String requestURL, String code) throws IOException, HttpException {
+
 		String clientId = this.getAppId();
 		String clientSecret = this.getAppSecret();
 		String redirectUri = uriWithoutQuery(requestURL);
-		String code = parameterMap.containsKey("code") ? ((String[]) parameterMap.get("code"))[0] : null;
 
 		log.debug("Exchanging Code '" + code + "'");
 
