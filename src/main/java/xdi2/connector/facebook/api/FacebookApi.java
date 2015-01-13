@@ -59,7 +59,7 @@ public class FacebookApi {
 
 		String clientId = this.getAppId();
 		if (redirectUri == null) redirectUri = uriWithoutQuery(request.getRequestURL().toString());
-		String scope = "email user_friends";
+		String scope = "email user_friends user_website user_birthday";
 		String state = userXri.toString();
 
 		// prepare redirect
