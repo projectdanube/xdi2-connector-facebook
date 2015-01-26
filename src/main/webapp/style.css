@@ -1,0 +1,254 @@
+* {
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	padding: 0px;
+	margin: 0px;
+	height: 100%;
+	font-family: "Roboto","TeX Gyre Heros","Segoe UI","Helvetica Neue",Helvetica,Arial,freesans,sans-serif;
+	font-size: 16px;
+	color: #333;
+	background-color: #f8f8f8;
+	background-image:url('images/back.jpg');
+	background-position: bottom left;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+#main {
+	padding-top: 100px;
+	margin-left: 40px;
+	margin-right: 40px;
+}
+
+#imgtop {
+	z-index: 1;
+	top: 0px;
+	position: fixed;
+	width: 100%;
+	height: 30px;
+}
+
+#imgtopleft {
+	z-index: 1;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	border-right: 1px solid #888;
+	background-color: #888;
+}
+
+#imgtopright {
+	z-index: 1;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	border-left: 1px solid #888;
+}
+
+div.header {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	padding-top: 15px;
+	padding-bottom: 25px;
+	padding-left: 150px;
+	height: 41px;
+	width: 100%;
+	background-color: white;
+	border-bottom: 1px solid #888;
+}
+
+#appname {
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+a {
+	text-decoration: none;
+	font-weight: bold;
+	color: #540dd8;
+	padding: 8px;
+}
+
+a:hover {
+	background-color: #d6c9f1;
+}
+
+p.subheader {
+	font-size: 16pt;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+hr {
+	color: #aaa;
+	background-color: #aaa;
+	height: 1px;
+	width: 100%;
+}
+
+div.line {
+	border-bottom: 1px solid #888;
+	height: 0px;
+	margin-left: -40px;
+	margin-right: -40px;
+	clear: both;
+}
+
+textarea.input {
+	background-color: white;
+	border: 3px solid black;
+	padding: 5px;
+	overflow: auto;
+}
+
+textarea {
+	background-color: white;
+	border: 3px solid black;
+}
+
+input {
+	background-color: white;
+	border: 3px solid black;
+	padding: 5px;
+}
+
+select {
+	background-color: white;
+	border: 3px solid black;
+	padding: 5px;
+}
+
+div.result {
+	background-color: rgba(214,201,241,0.9);
+	padding-left: 20px;
+	border: 3px dashed black;
+}
+
+a.graphit {
+	display: block;
+	float: right;
+	margin: 15px;
+}
+
+a.graphit:hover {
+	background-color: white;
+}
+
+/*--------------------------------------------------
+  REQUIRED to hide the non-active tab content.
+  But do not hide them in the print stylesheet!
+  --------------------------------------------------*/
+.tabberlive .tabbertabhide {
+	display: none;
+}
+
+/*--------------------------------------------------
+  .tabber = before the tabber interface is set up
+  .tabberlive = after the tabber interface is set up
+  --------------------------------------------------*/
+.tabber {
+	
+}
+
+.tabberlive {
+	margin-top: 1em;
+}
+
+/*--------------------------------------------------
+  ul.tabbernav = the tab navigation list
+  li.tabberactive = the active tab
+  --------------------------------------------------*/
+ul.tabbernav {
+	margin: 0;
+	padding: 10px 0;
+	border-bottom: 3px solid gray;
+	font-weight: bold;
+}
+
+ul.tabbernav li {
+	list-style: none;
+	margin: 0;
+	display: inline;
+}
+
+ul.tabbernav li a {
+	padding: 10px 0.5em;
+	margin-left: 0px;
+	border: 3px solid gray;
+	border-bottom: none;
+	color: black;
+	background-color: lightgray;
+	text-decoration: none;
+}
+
+ul.tabbernav li a:link {
+	
+}
+
+ul.tabbernav li a:visited {
+	
+}
+
+ul.tabbernav li a:hover {
+	
+}
+
+ul.tabbernav li.tabberactive a {
+	background-color: #fff;
+	border-bottom: 3px solid white;
+}
+
+ul.tabbernav li.tabberactive a:hover {
+	color: #000;
+	background: white;
+	border-bottom: 3px solid white;
+}
+
+/*--------------------------------------------------
+  .tabbertab = the tab content
+  Add style only after the tabber interface is set up (.tabberlive)
+  --------------------------------------------------*/
+.tabberlive .tabbertab {
+	padding: 15px;
+	border: 3px solid gray;
+	border-top: 0;
+
+	/* If you don't want the tab size changing whenever a tab is changed
+    you can set a fixed height */
+
+	/* height:200px; */
+
+	/* If you set a fix height set overflow to auto and you will get a
+    scrollbar when necessary */
+
+	/* overflow:auto; */
+}
+
+/* If desired, hide the heading since a heading is provided by the tab */
+.tabberlive .tabbertab h2 {
+	display: none;
+}
+
+.tabberlive .tabbertab h3 {
+	display: none;
+}
+
+/* Example of using an ID to set different styles for the tabs on the page */
+.tabberlive#tab1 {
+	
+}
+
+.tabberlive#tab2 {
+	
+}
+
+.tabberlive#tab2 .tabbertab {
+	height: 200px;
+	overflow: auto;
+}

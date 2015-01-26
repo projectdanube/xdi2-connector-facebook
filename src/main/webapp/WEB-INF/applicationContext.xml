@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<!-- XDI ENDPOINT REGISTRY AND TRANSPORT -->
+
+	<bean id="HttpMessagingTargetRegistry" class="xdi2.transport.impl.http.registry.HttpMessagingTargetRegistry" init-method="init" destroy-method="shutdown" />
+
+	<bean id="HttpTransport" class="xdi2.transport.impl.http.HttpTransport" init-method="init" destroy-method="shutdown">
+		<property name="httpMessagingTargetRegistry" ref="HttpMessagingTargetRegistry" />
+		<property name="interceptors">
+			<util:list>
+				<bean class="xdi2.transport.impl.http.interceptor.impl.DebugHttpTransportInterceptor" />
+			</util:list>
+		</property>
+	</bean>
+
+	<!-- SPRING -->
+
+	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="xdi2.transport.spring.XDI2SpringConverter" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- WEB SERVLET -->
+
+	<bean id="ClientServlet" class="xdi2.connector.facebook.client.ClientServlet" init-method="init" destroy-method="destroy">
+		<property name="graph" ref="graph1" />
+		<property name="facebookApi" ref="facebookApi" />
+		<property name="facebookMapping" ref="facebookMapping" />
+	</bean>
+
+	<!-- FACEBOOK CONNECTOR -->
+
+	<bean id="facebookMappingGraphfactory" class="xdi2.core.impl.wrapped.classpath.ClasspathWrapperGraphFactory">
+		<property name="classpath" value="/xdi2/connector/facebook/mapping/mapping.xdi" />
+		<property name="mimeType" value="text/xdi;ordered=1" />
+	</bean>
+
+	<bean id="facebookMappingGraph" factory-bean="facebookMappingGraphfactory" factory-method="openGraph" />
+
+	<bean id="facebookContributor" class="xdi2.connector.facebook.contributor.FacebookContributor">
+		<property name="facebookApi" ref="facebookApi" />
+		<property name="facebookMapping" ref="facebookMapping" />
+	</bean>
+
+	<bean id="facebookApi" class="xdi2.connector.facebook.api.FacebookApi" init-method="init" destroy-method="destroy">
+		<property name="appId" value="420250631345354" />
+		<property name="appSecret" value="c2feeda99926ab3c6096beaa8e6eca73" />
+	</bean>
+
+	<bean id="facebookMapping" class="xdi2.connector.facebook.mapping.FacebookMapping">
+		<property name="mappingGraph" ref="facebookMappingGraph" />
+	</bean>
+
+	<!-- MESSAGING TARGET at /graph -->
+	<!-- MessagingTarget: GraphMessagingTarget backed by a MemoryGraph -->
+
+	<bean id="graphfactory1" class="xdi2.core.impl.memory.MemoryGraphFactory">
+	</bean>
+
+	<bean id="graph1" factory-bean="graphfactory1" factory-method="openGraph">
+		<constructor-arg><value>([=]!:uuid:1111)</value></constructor-arg>
+	</bean>
+
+	<bean name="/graph" class="xdi2.messaging.target.impl.graph.GraphMessagingTarget">
+		<property name="graph" ref="graph1" />
+		<property name="interceptors">
+			<util:list>
+				<bean class="xdi2.messaging.target.interceptor.impl.BootstrapInterceptor">
+					<property name="bootstrapOwner" value="[=]!:uuid:1111" />
+					<property name="bootstrapOwnerSynonyms">
+						<util:list>
+							<value>=alice</value>
+						</util:list>
+					</property>
+					<property name="bootstrapRootLinkContract" value="true" />
+					<property name="bootstrapPublicLinkContract" value="true" />
+				</bean>
+				<bean class="xdi2.messaging.target.interceptor.impl.RefInterceptor" />
+				<ref bean="facebookContributor" />
+			</util:list>
+		</property>
+		<property name="contributors">
+			<util:list>
+				<bean id="generateKeyContributor" class="xdi2.messaging.target.contributor.impl.keygen.GenerateKeyContributor" />
+				<ref bean="facebookContributor" />
+			</util:list>
+		</property>
+	</bean>
+
+	<!-- MESSAGING TARGET at /mapping -->
+	<!-- MessagingTarget: GraphMessagingTarget -->
+
+	<bean name="/mapping" class="xdi2.messaging.target.impl.graph.GraphMessagingTarget">
+		<property name="graph" ref="facebookMappingGraph" />
+	</bean>
+
+</beans>
