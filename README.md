@@ -7,9 +7,8 @@ It can map personal data from the [Facebook Graph API](https://developers.facebo
 
 ### Information
 
-* [Notes](https://github.com/projectdanube/xdi2-connector-facebook/wiki/Notes)
+* [Walkthrough](https://github.com/projectdanube/xdi2-connector-facebook/wiki/Walkthrough)
 * [Mapping](https://github.com/projectdanube/xdi2-connector-facebook/wiki/Mapping)
-* [Sequences](https://github.com/projectdanube/xdi2-connector-facebook/wiki/Sequences)
 
 ### How to build
 
