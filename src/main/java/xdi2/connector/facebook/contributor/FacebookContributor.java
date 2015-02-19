@@ -33,7 +33,7 @@ import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
 import xdi2.messaging.target.interceptor.InterceptorResult;
 import xdi2.messaging.target.interceptor.MessageEnvelopeInterceptor;
 
-@ContributorMount(contributorAddresses={"(https://facebook.com/)"})
+@ContributorMount(contributorXDIAddresses={"(https://facebook.com/)"})
 public class FacebookContributor extends AbstractContributor implements MessageEnvelopeInterceptor, Prototype<FacebookContributor> {
 
 	private static final Logger log = LoggerFactory.getLogger(FacebookContributor.class);
@@ -118,7 +118,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	 * Sub-Contributors
 	 */
 
-	@ContributorMount(contributorAddresses={"[=]{!}"})
+	@ContributorMount(contributorXDIAddresses={"[=]{!}"})
 	private class FacebookUserContributor extends AbstractContributor {
 
 		private FacebookUserContributor() {
@@ -179,7 +179,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorMount(contributorAddresses={"#(user)[#(friend)]"})
+	@ContributorMount(contributorXDIAddresses={"#(user)[#(friend)]"})
 	private class FacebookUserFriendsContributor extends AbstractContributor {
 
 		private FacebookUserFriendsContributor() {
@@ -258,7 +258,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorMount(contributorAddresses={"#(user){#}"})
+	@ContributorMount(contributorXDIAddresses={"#(user){#}"})
 	private class FacebookUserFieldContributor extends AbstractContributor {
 
 		private FacebookUserFieldContributor() {
