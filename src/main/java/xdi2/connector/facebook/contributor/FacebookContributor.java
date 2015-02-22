@@ -118,7 +118,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	 * Sub-Contributors
 	 */
 
-	@ContributorMount(contributorXDIAddresses={"[=]{!}"})
+	@ContributorMount(contributorXDIAddresses={"[=]{!:uuid:0000}"})
 	private class FacebookUserContributor extends AbstractContributor {
 
 		private FacebookUserContributor() {
@@ -137,7 +137,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + userIdXri);
 
-			if (userIdXri.equals("[=]{!}")) return ContributorResult.DEFAULT;
+			if (userIdXri.equals("[=]{!:uuid:0000}")) return ContributorResult.DEFAULT;
 
 			// retrieve the Facebook user ID
 
@@ -195,7 +195,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", facebookUserIdXri: " + facebookUserIdXri);
 
-			if (facebookUserIdXri.equals("[=]{!}")) return ContributorResult.DEFAULT;
+			if (facebookUserIdXri.equals("[=]{!:uuid:0000}")) return ContributorResult.DEFAULT;
 
 			// retrieve the Facebook friends
 
@@ -258,7 +258,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 		}
 	}
 
-	@ContributorMount(contributorXDIAddresses={"#(user){#}"})
+	@ContributorMount(contributorXDIAddresses={"#(user){<#field>}"})
 	private class FacebookUserFieldContributor extends AbstractContributor {
 
 		private FacebookUserFieldContributor() {
@@ -275,8 +275,8 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 			log.debug("facebookContextXri: " + facebookContextXri + ", userIdXri: " + facebookUserIdXri + ", facebookDataXri: " + facebookDataXri);
 
-			if (facebookUserIdXri.equals("[=]{!}")) return ContributorResult.DEFAULT;
-			if (facebookDataXri.equals("{#}")) return ContributorResult.DEFAULT;
+			if (facebookUserIdXri.equals("[=]{!:uuid:0000}")) return ContributorResult.DEFAULT;
+			if (facebookDataXri.equals("{<#field>}")) return ContributorResult.DEFAULT;
 
 			// parse identifiers
 
