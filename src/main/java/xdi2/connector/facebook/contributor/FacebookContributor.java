@@ -244,7 +244,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 
 					XDIAddress facebookFriendXri = XDIAddress.create("[=]!" + facebookFriendId);
 					ContextNode facebookFriendContextNode = messageResult.getGraph().setDeepContextNode(XDIAddress.create("" + facebookContextXri + facebookFriendXri));
-					facebookFriendContextNode.setDeepContextNode(XDIAddress.create("<#name>&")).setLiteral(facebookFriendName);
+					facebookFriendContextNode.setDeepContextNode(XDIAddress.create("<#name>&")).setLiteralString(facebookFriendName);
 
 					XdiEntityMemberOrdered friendXdiEntityMemberOrdered = friendXdiEntityCollection.setXdiMemberOrdered(-1);
 
@@ -317,7 +317,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 			if (facebookField != null) {
 
 				XdiAttributeSingleton xdiAttributeSingleton = (XdiAttributeSingleton) XdiAbstractAttribute.fromContextNode(messageResult.getGraph().setDeepContextNode(contributorsXri));
-				xdiAttributeSingleton.getXdiValue(true).getContextNode().setLiteral(facebookField);
+				xdiAttributeSingleton.setLiteralDataString(facebookField);
 			}
 
 			// done

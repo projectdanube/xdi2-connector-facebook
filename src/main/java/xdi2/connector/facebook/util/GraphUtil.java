@@ -3,9 +3,8 @@ package xdi2.connector.facebook.util;
 import xdi2.connector.facebook.mapping.FacebookMapping;
 import xdi2.core.ContextNode;
 import xdi2.core.Graph;
-import xdi2.core.Literal;
+import xdi2.core.LiteralNode;
 import xdi2.core.constants.XDIAuthenticationConstants;
-import xdi2.core.constants.XDIConstants;
 import xdi2.core.constants.XDIDictionaryConstants;
 import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.syntax.XDIAddress;
@@ -17,23 +16,23 @@ public class GraphUtil {
 
 	public static String retrieveFacebookAccessToken(Graph graph, XDIAddress facebookUserIdXri) {
 
-		XDIAddress contextNodeXri = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XDI_ADD_OAUTH_TOKEN + XDIConstants.XDI_ADD_VALUE);
+		XDIAddress contextNodeXDIAddress = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XDI_ADD_OAUTH_TOKEN);
 
-		Literal literal = graph.getDeepLiteral(contextNodeXri);
+		LiteralNode literalNode = graph.getDeepLiteralNode(contextNodeXDIAddress);
 
-		return literal == null ? null : literal.getLiteralDataString();
+		return literalNode == null ? null : literalNode.getLiteralDataString();
 	}
 
 	public static void storeFacebookAccessToken(Graph graph, XDIAddress facebookUserIdXri, String facebookAccessToken) {
 
-		XDIAddress contextNodeXri = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XDI_ADD_OAUTH_TOKEN + XDIConstants.XDI_ADD_VALUE);
+		XDIAddress contextNodeXDIAddress = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XDI_ADD_OAUTH_TOKEN);
 
-		graph.setDeepLiteral(contextNodeXri, facebookAccessToken);
+		graph.setDeepLiteralNode(contextNodeXDIAddress).setLiteralDataString(facebookAccessToken);
 	}
 
 	public static void removeFacebookAccessToken(Graph graph, XDIAddress facebookUserIdXri) {
 
-		XDIAddress contextNodeXri = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XDI_ADD_OAUTH_TOKEN + XDIConstants.XDI_ADD_VALUE);
+		XDIAddress contextNodeXri = XDIAddress.create("" + FacebookMapping.XDI_ADD_FACEBOOK_CONTEXT + facebookUserIdXri + XDIAuthenticationConstants.XDI_ADD_OAUTH_TOKEN);
 
 		ContextNode contextNode = graph.getDeepContextNode(contextNodeXri);
 		if (contextNode == null) return;
