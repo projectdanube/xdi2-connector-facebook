@@ -17,7 +17,7 @@ import xdi2.core.features.equivalence.Equivalence;
 import xdi2.core.features.nodetypes.XdiAbstractAttribute;
 import xdi2.core.features.nodetypes.XdiAttributeSingleton;
 import xdi2.core.features.nodetypes.XdiEntityCollection;
-import xdi2.core.features.nodetypes.XdiEntityMemberOrdered;
+import xdi2.core.features.nodetypes.XdiEntityInstanceOrdered;
 import xdi2.core.syntax.XDIAddress;
 import xdi2.messaging.GetOperation;
 import xdi2.messaging.MessageEnvelope;
@@ -246,7 +246,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 					ContextNode facebookFriendContextNode = messageResult.getGraph().setDeepContextNode(XDIAddress.create("" + facebookContextXri + facebookFriendXri));
 					facebookFriendContextNode.setDeepContextNode(XDIAddress.create("<#name>&")).setLiteralString(facebookFriendName);
 
-					XdiEntityMemberOrdered friendXdiEntityMemberOrdered = friendXdiEntityCollection.setXdiMemberOrdered(-1);
+					XdiEntityInstanceOrdered friendXdiEntityMemberOrdered = friendXdiEntityCollection.setXdiMemberOrdered(false, false, -1);
 
 					Equivalence.setIdentityContextNode(friendXdiEntityMemberOrdered.getContextNode(), facebookFriendContextNode);
 				}
