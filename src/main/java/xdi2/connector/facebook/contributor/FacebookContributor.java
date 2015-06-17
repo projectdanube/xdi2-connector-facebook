@@ -246,9 +246,9 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 					ContextNode facebookFriendContextNode = messageResult.getGraph().setDeepContextNode(XDIAddress.create("" + facebookContextXri + facebookFriendXri));
 					facebookFriendContextNode.setDeepContextNode(XDIAddress.create("<#name>&")).setLiteralString(facebookFriendName);
 
-					XdiEntityInstanceOrdered friendXdiEntityMemberOrdered = friendXdiEntityCollection.setXdiMemberOrdered(false, false);
+					XdiEntityInstanceOrdered friendXdiEntityInstanceOrdered = friendXdiEntityCollection.setXdiMemberOrdered(false, false);
 
-					Equivalence.setIdentityContextNode(friendXdiEntityMemberOrdered.getContextNode(), facebookFriendContextNode);
+					Equivalence.setIdentityContextNode(friendXdiEntityInstanceOrdered.getContextNode(), facebookFriendContextNode);
 				}
 			}
 
