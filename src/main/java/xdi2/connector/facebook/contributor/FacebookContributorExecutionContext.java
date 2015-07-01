@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import xdi2.messaging.context.ExecutionContext;
+import xdi2.messaging.target.execution.ExecutionContext;
 
 /**
  * Methods for storing state related to the FacebookContributor.
