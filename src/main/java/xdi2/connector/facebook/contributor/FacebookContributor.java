@@ -158,7 +158,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 				facebookUserId = user.getString("id");
 			} catch (Exception ex) {
 
-				throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);
+				throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, executionContext);
 			}
 
 			// add the Facebook user ID to the response
@@ -217,7 +217,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 				facebookFriends = user.getJSONObject("friends").getJSONArray("data");
 			} catch (Exception ex) {
 
-				throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);
+				throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, executionContext);
 			}
 
 			// add the Facebook friends to the response
@@ -239,7 +239,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 						facebookFriendName = facebookFriend.getString("name");
 					} catch (JSONException ex) {
 
-						throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);
+						throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, executionContext);
 					}
 
 					XDIAddress facebookFriendXri = XDIAddress.create("[=]!" + facebookFriendId);
@@ -309,7 +309,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 				facebookField = user.getString(facebookFieldIdentifier);
 			} catch (Exception ex) {
 
-				throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, null);
+				throw new Xdi2MessagingException("Cannot load user data: " + ex.getMessage(), ex, executionContext);
 			}
 
 			// add the Facebook field to the response
