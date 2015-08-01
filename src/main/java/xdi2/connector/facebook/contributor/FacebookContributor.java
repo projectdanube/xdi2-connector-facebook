@@ -317,7 +317,7 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 			if (facebookField != null) {
 
 				XdiAttributeSingleton xdiAttributeSingleton = (XdiAttributeSingleton) XdiAbstractAttribute.fromContextNode(operationResultGraph.setDeepContextNode(contributorsXri));
-				xdiAttributeSingleton.setLiteralDataString(facebookField);
+				xdiAttributeSingleton.setLiteralString(facebookField);
 			}
 
 			// done
