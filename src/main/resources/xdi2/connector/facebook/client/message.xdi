@@ -1,4 +1,4 @@
-[=]!1111[$msg]*!:uuid:1234/$is()/([=]!1111)
+[=]!1111[$msg]*!:uuid:1234/$to/([=]!1111)
 [=]!1111[$msg]*!:uuid:1234$do/$get/(https://facebook.com/)[=]!1111<$oauth><$token>
 [=]!1111[$msg]*!:uuid:1234$do/$get/(https://facebook.com/)[=]!1111#(user)<#(first_name)>
 [=]!1111[$msg]*!:uuid:1234$do/$get/(https://facebook.com/)[=]!1111#(user)<#(last_name)>
