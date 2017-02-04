@@ -5,10 +5,10 @@
 
 	<!-- XDI ENDPOINT REGISTRY AND TRANSPORT -->
 
-	<bean id="UriMessagingTargetRegistry" class="xdi2.transport.registry.impl.uri.UriMessagingTargetRegistry" init-method="init" destroy-method="shutdown" />
+	<bean id="UriMessagingContainerRegistry" class="xdi2.transport.registry.impl.uri.UriMessagingContainerRegistry" init-method="init" destroy-method="shutdown" />
 
 	<bean id="HttpTransport" class="xdi2.transport.impl.http.HttpTransport" init-method="init" destroy-method="shutdown">
-		<property name="uriMessagingTargetRegistry" ref="UriMessagingTargetRegistry" />
+		<property name="uriMessagingContainerRegistry" ref="UriMessagingContainerRegistry" />
 		<property name="interceptors">
 			<util:list>
 				<bean class="xdi2.transport.impl.http.interceptor.impl.DebugHttpTransportInterceptor" />
@@ -58,8 +58,8 @@
 		<property name="mappingGraph" ref="facebookMappingGraph" />
 	</bean>
 
-	<!-- MESSAGING TARGET at /graph -->
-	<!-- MessagingTarget: GraphMessagingTarget backed by a MemoryGraph -->
+	<!-- MESSAGING CONTAINER at /graph -->
+	<!-- MessagingContainer: GraphMessagingContainer backed by a MemoryGraph -->
 
 	<bean id="graphfactory1" class="xdi2.core.impl.memory.MemoryGraphFactory">
 	</bean>
@@ -68,11 +68,11 @@
 		<constructor-arg><value>(=!:uuid:1111)</value></constructor-arg>
 	</bean>
 
-	<bean name="/graph" class="xdi2.messaging.target.impl.graph.GraphMessagingTarget">
+	<bean name="/graph" class="xdi2.messaging.container.impl.graph.GraphMessagingContainer">
 		<property name="graph" ref="graph1" />
 		<property name="interceptors">
 			<util:list>
-				<bean class="xdi2.messaging.target.interceptor.impl.BootstrapInterceptor">
+				<bean class="xdi2.messaging.container.interceptor.impl.BootstrapInterceptor">
 					<property name="bootstrapOwner" value="=!:uuid:1111" />
 					<property name="bootstrapOwnerSynonyms">
 						<util:list>
@@ -82,22 +82,22 @@
 					<property name="bootstrapRootLinkContract" value="true" />
 					<property name="bootstrapPublicLinkContract" value="true" />
 				</bean>
-				<bean class="xdi2.messaging.target.interceptor.impl.RefInterceptor" />
+				<bean class="xdi2.messaging.container.interceptor.impl.RefInterceptor" />
 				<ref bean="facebookContributor" />
 			</util:list>
 		</property>
 		<property name="contributors">
 			<util:list>
-				<bean id="generateKeyContributor" class="xdi2.messaging.target.contributor.impl.keygen.GenerateKeyContributor" />
+				<bean id="generateKeyContributor" class="xdi2.messaging.container.contributor.impl.keygen.GenerateKeyContributor" />
 				<ref bean="facebookContributor" />
 			</util:list>
 		</property>
 	</bean>
 
-	<!-- MESSAGING TARGET at /mapping -->
-	<!-- MessagingTarget: GraphMessagingTarget -->
+	<!-- MESSAGING CONTAINER at /mapping -->
+	<!-- MessagingContainer: GraphMessagingContainer -->
 
-	<bean name="/mapping" class="xdi2.messaging.target.impl.graph.GraphMessagingTarget">
+	<bean name="/mapping" class="xdi2.messaging.container.impl.graph.GraphMessagingContainer">
 		<property name="graph" ref="facebookMappingGraph" />
 	</bean>
 

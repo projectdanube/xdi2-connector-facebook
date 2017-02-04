@@ -21,17 +21,17 @@ import xdi2.core.features.nodetypes.XdiEntityInstanceOrdered;
 import xdi2.core.syntax.XDIAddress;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.operations.GetOperation;
-import xdi2.messaging.target.MessagingTarget;
-import xdi2.messaging.target.Prototype;
-import xdi2.messaging.target.contributor.ContributorMount;
-import xdi2.messaging.target.contributor.ContributorResult;
-import xdi2.messaging.target.contributor.impl.AbstractContributor;
-import xdi2.messaging.target.exceptions.Xdi2MessagingException;
-import xdi2.messaging.target.execution.ExecutionContext;
-import xdi2.messaging.target.execution.ExecutionResult;
-import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
-import xdi2.messaging.target.interceptor.InterceptorResult;
-import xdi2.messaging.target.interceptor.MessageEnvelopeInterceptor;
+import xdi2.messaging.container.MessagingContainer;
+import xdi2.messaging.container.Prototype;
+import xdi2.messaging.container.contributor.ContributorMount;
+import xdi2.messaging.container.contributor.ContributorResult;
+import xdi2.messaging.container.contributor.impl.AbstractContributor;
+import xdi2.messaging.container.exceptions.Xdi2MessagingException;
+import xdi2.messaging.container.execution.ExecutionContext;
+import xdi2.messaging.container.execution.ExecutionResult;
+import xdi2.messaging.container.impl.graph.GraphMessagingContainer;
+import xdi2.messaging.container.interceptor.InterceptorResult;
+import xdi2.messaging.container.interceptor.MessageEnvelopeInterceptor;
 
 @ContributorMount(contributorXDIAddresses={"(https://facebook.com/)"})
 public class FacebookContributor extends AbstractContributor implements MessageEnvelopeInterceptor, Prototype<FacebookContributor> {
@@ -83,11 +83,11 @@ public class FacebookContributor extends AbstractContributor implements MessageE
 	 */
 
 	@Override
-	public void init(MessagingTarget messagingTarget) throws Exception {
+	public void init(MessagingContainer messagingContainer) throws Exception {
 
-		super.init(messagingTarget);
+		super.init(messagingContainer);
 
-		if (this.getTokenGraph() == null && messagingTarget instanceof GraphMessagingTarget) this.setTokenGraph(((GraphMessagingTarget) messagingTarget).getGraph()); 
+		if (this.getTokenGraph() == null && messagingContainer instanceof GraphMessagingContainer) this.setTokenGraph(((GraphMessagingContainer) messagingContainer).getGraph()); 
 		if (this.getTokenGraph() == null) throw new Xdi2MessagingException("No token graph.", null, null);
 	}
 
